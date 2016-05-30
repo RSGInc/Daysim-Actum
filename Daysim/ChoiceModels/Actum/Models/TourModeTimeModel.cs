@@ -483,20 +483,22 @@ namespace Daysim.ChoiceModels.Actum.Models {
 				}
 				else if (mode == Global.Settings.Modes.Hov2) {
 					modeComponent.AddUtilityTerm(40, 1);
-					modeComponent.AddUtilityTerm(41, maleFlag);
+					modeComponent.AddUtilityTerm(41, maleFlag); 
 					//modeComponent.AddUtilityTerm(41, onePersonHouseholdFlag);
 
-					//modeComponent.AddUtilityTerm(42, childrenUnder5);
-					//modeComponent.AddUtilityTerm(43, childrenAge5Through15);
-					//modeComponent.AddUtilityTerm(44, nonworkingAdults + retiredAdults);
+					//GV: Testing coeff. 42-44 again, 26. may 2016, coeff. numbering changed
+                    modeComponent.AddUtilityTerm(42, childrenUnder5);
+					modeComponent.AddUtilityTerm(43, childrenAge5Through15);
+					modeComponent.AddUtilityTerm(44, nonworkingAdults + retiredAdults);
 
-					//GV: these are significant and plus
-					modeComponent.AddUtilityTerm(42, HHwithLowIncomeFlag);
-					modeComponent.AddUtilityTerm(43, HHwithMidleIncomeFlag);
-					modeComponent.AddUtilityTerm(44, HHwithHighIncomeFlag);
+					//GV: these are significant and plus; 26. may 2016
+					modeComponent.AddUtilityTerm(45, HHwithLowIncomeFlag);
+					modeComponent.AddUtilityTerm(46, HHwithMidleIncomeFlag); 
+					modeComponent.AddUtilityTerm(47, HHwithHighIncomeFlag);
 
-					modeComponent.AddUtilityTerm(46, noCarsInHouseholdFlag);
-					modeComponent.AddUtilityTerm(47, carsLessThanDriversFlag);
+                    // GV coeff. numbering changed
+					modeComponent.AddUtilityTerm(48, noCarsInHouseholdFlag);
+					modeComponent.AddUtilityTerm(49, carsLessThanDriversFlag);
 				}
 				else if (mode == Global.Settings.Modes.Sov) {
 					modeComponent.AddUtilityTerm(50, 1);
@@ -505,12 +507,14 @@ namespace Daysim.ChoiceModels.Actum.Models {
 					modeComponent.AddUtilityTerm(53, partTimeWorkerFlag);
 					modeComponent.AddUtilityTerm(54, onePersonHouseholdFlag);
 
-					//GV: these are NOT significant 
-					//modeComponent.AddUtilityTerm(53, HHwithLowIncomeFlag);
-					//modeComponent.AddUtilityTerm(54, HHwithMidleIncomeFlag);
-					//modeComponent.AddUtilityTerm(55, HHwithHighIncomeFlag);
+					//GV: these are NOT significant
+                    //GV: testing income again, 26. may 2016
+					modeComponent.AddUtilityTerm(55, HHwithLowIncomeFlag);
+					modeComponent.AddUtilityTerm(56, HHwithMidleIncomeFlag);
+					modeComponent.AddUtilityTerm(57, HHwithHighIncomeFlag);
 
-					modeComponent.AddUtilityTerm(57, carsLessThanWorkersFlag);
+                    //GV: coeff. numbering changed, 26. may 2016
+					modeComponent.AddUtilityTerm(58, carsLessThanWorkersFlag);
 				}
 				else if (mode == Global.Settings.Modes.Bike) {
 					modeComponent.AddUtilityTerm(60, 1);
@@ -525,8 +529,9 @@ namespace Daysim.ChoiceModels.Actum.Models {
 					modeComponent.AddUtilityTerm(67, carsLessThanDriversFlag);
 				}
 				else if (mode == Global.Settings.Modes.Walk) {
-					modeComponent.AddUtilityTerm(70, 1.0);
-					//modeComponent.AddUtilityTerm(71, femaleFlag);
+					modeComponent.AddUtilityTerm(70, 1.0); 
+					//GV: Testing female variable again; 26. may 2016
+                    modeComponent.AddUtilityTerm(71, femaleFlag);
 					modeComponent.AddUtilityTerm(72, nonworkingAdults);
 					modeComponent.AddUtilityTerm(73, retiredAdults);
 
@@ -625,7 +630,7 @@ namespace Daysim.ChoiceModels.Actum.Models {
 					alternative.Choice = modeTimes; // JLB added 20130420
 
 					//alternative.AddNestedAlternative(HTourModeTime.TOTAL_TOUR_MODE_TIMES + periodComb + 1, periodComb, THETA_PARAMETER);
-					alternative.AddNestedAlternative(HTourModeTime.TotalTourModeTimes + mode, mode - 1, THETA_PARAMETER);
+					alternative.AddNestedAlternative(HTourModeTime.TotalTourModeTimes + mode, mode - 1, THETA_PARAMETER); 
 
 					//if (Global.Configuration.IsInEstimationMode && altIndex == choice.Index) {
 					//	Global.PrintFile.WriteLine("Aper Dper Mode {0} {1} {2} Travel Times {3} {4} Window {5} {6}",

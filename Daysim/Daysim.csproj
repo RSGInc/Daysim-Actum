@@ -354,10 +354,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ParkAndRideNodeDao.cs" />
-    <Compile Include="ParkAndRideShadowPricing\ParkAndRideShadowPriceCalculator.cs" />
-    <Compile Include="ParkAndRideShadowPricing\ParkAndRideShadowPriceWriter.cs" />
-    <Compile Include="ParkAndRideShadowPricing\ParkAndRideShadowPriceReader.cs" />
-    <Compile Include="ParkAndRideShadowPricing\ParkAndRideShadowPriceNode.cs" />
+    <Compile Include="Settings\ParkAndRideShadowPricing\ParkAndRideShadowPriceCalculator.cs" />
+    <Compile Include="Settings\ParkAndRideShadowPricing\ParkAndRideShadowPriceWriter.cs" />
+    <Compile Include="Settings\ParkAndRideShadowPricing\ParkAndRideShadowPriceReader.cs" />
+    <Compile Include="Settings\ParkAndRideShadowPricing\ParkAndRideShadowPriceNode.cs" />
     <Compile Include="DomainModels\Persisters\PersonPersister.cs" />
     <Compile Include="RawConverter.cs" />
     <Compile Include="AggregateLogsums\AggregateLogsumsExporter.cs" />
@@ -483,7 +483,7 @@
   </PropertyGroup>
   <PropertyGroup>
     <PostBuildEvent>
-        </PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
