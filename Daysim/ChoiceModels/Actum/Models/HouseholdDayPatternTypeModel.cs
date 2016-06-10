@@ -10,11 +10,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Daysim.DomainModels;
-using Daysim.DomainModels.Default.Wrappers;
+using Daysim.DomainModels.Default.Wrappers; 
 using Daysim.DomainModels.Default;
 using Daysim.DomainModels.Extensions;
 using Daysim.Framework.ChoiceModels;
-using Daysim.Framework.Coefficients;
+using Daysim.Framework.Coefficients; 
 using Daysim.Framework.Core;
 
 namespace Daysim.ChoiceModels.Actum.Models {

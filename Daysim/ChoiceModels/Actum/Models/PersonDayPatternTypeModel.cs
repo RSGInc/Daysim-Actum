@@ -137,8 +137,6 @@ namespace Daysim.ChoiceModels.Actum.Models {
 			//var compositeLogsum = Global.AggregateLogsums[household.ResidenceZoneId][Global.Settings.Purposes.HomeBasedComposite][carOwnership][votALSegment][transitAccessSegment];
 			var compositeLogsum = Global.AggregateLogsums[household.ResidenceZoneId][Global.Settings.Purposes.HomeBasedComposite][Global.Settings.CarOwnerships.NoCars][votALSegment][transitAccessSegment];
 
-
-
 			// Pattern Type Mandatory on tour (at least one work or school tour)
 			var alternative = choiceProbabilityCalculator.GetAlternative(0, mandatoryAvailableFlag, choice == 1);
 			alternative.Choice = 1;
@@ -165,10 +163,14 @@ namespace Daysim.ChoiceModels.Actum.Models {
 
             //alternative.AddUtilityTerm(12, (householdDay.Household.VehiclesAvailable == 1).ToFlag());
             //alternative.AddUtilityTerm(13, (householdDay.Household.VehiclesAvailable >= 2).ToFlag());
-            alternative.AddUtilityTerm(15, (householdDay.Household.VehiclesAvailable == 1 && household.Has2Drivers).ToFlag());
+            
+            //GV: not sign. 10. juni 2016
+            //alternative.AddUtilityTerm(15, (householdDay.Household.VehiclesAvailable == 1 && household.Has2Drivers).ToFlag());
             alternative.AddUtilityTerm(16, (householdDay.Household.VehiclesAvailable >= 2 && household.Has2Drivers).ToFlag());
 
-				//alternative.AddUtilityTerm(17, compositeLogsum); //GV: logsum for mandatory 
+            //GV: introduced again - 10. june 2016
+            //GV: logsum for mandatory - wrong sign
+            //alternative.AddUtilityTerm(17, compositeLogsum);  
 
             //alternative.AddUtilityTerm(17, (householdDay.Household.Income >= 300000 && householdDay.Household.Income < 600000).ToFlag()); //GV; 16. april 2013, not significant
             //alternative.AddUtilityTerm(18, (householdDay.Household.Income >= 600000 && householdDay.Household.Income < 900000).ToFlag()); //GV; 16. april 2013, not significant
@@ -187,8 +189,9 @@ namespace Daysim.ChoiceModels.Actum.Models {
             alternative.AddUtilityTerm(22, person.IsRetiredAdult.ToFlag());
             alternative.AddUtilityTerm(23, person.IsNonworkingAdult.ToFlag());
 
-            alternative.AddUtilityTerm(24, householdDay.Household.HasChildrenUnder5.ToFlag());
-            alternative.AddUtilityTerm(25, householdDay.Household.HasChildrenAge5Through15.ToFlag());
+            //GV: not sign. 10. june 2016
+            //alternative.AddUtilityTerm(24, householdDay.Household.HasChildrenUnder5.ToFlag());
+            //alternative.AddUtilityTerm(25, householdDay.Household.HasChildrenAge5Through15.ToFlag());
 
             //alternative.AddUtilityTerm(31, (householdDay.AdultsInSharedHomeStay == 2).ToFlag());
             //alternative.AddUtilityTerm(33, (householdDay.Household.HouseholdTotals.FullAndPartTimeWorkers >= 2).ToFlag());
@@ -204,7 +207,7 @@ namespace Daysim.ChoiceModels.Actum.Models {
             alternative.AddUtilityTerm(31, (householdDay.Household.VehiclesAvailable == 1 && household.Has2Drivers).ToFlag());
             alternative.AddUtilityTerm(32, (householdDay.Household.VehiclesAvailable >= 2 && household.Has2Drivers).ToFlag());
 
-			   //alternative.AddUtilityTerm(33, compositeLogsum); //GV: logsum for non-mandatory 
+			//alternative.AddUtilityTerm(33, compositeLogsum); //GV: logsum for non-mandatory 
 			
             //alternative.AddUtilityTerm(33, (householdDay.Household.Income >= 300000 && householdDay.Household.Income < 600000).ToFlag()); //GV; 16. april 2013, not significant
             //alternative.AddUtilityTerm(34, (householdDay.Household.Income >= 600000 && householdDay.Household.Income < 900000).ToFlag()); //GV; 16. april 2013, not significant
@@ -216,14 +219,14 @@ namespace Daysim.ChoiceModels.Actum.Models {
             //alternative.AddUtilityTerm(24, person.IsChildUnder5.ToFlag());
             //alternative.AddUtilityTerm(25, person.IsNonworkingAdult.ToFlag());
 
-
-
             // PatternType Home (all day)
             alternative = choiceProbabilityCalculator.GetAlternative(2, true, choice == 3);
             alternative.Choice = 3;
 
             alternative.AddUtilityTerm(41, 1);
             alternative.AddUtilityTerm(42, person.WorksAtHome.ToFlag());
+
+            //GV: introduced again - 10. june 2016; not sign.
             //alternative.AddUtilityTerm(43, person.IsUniversityStudent.ToFlag());
 
             //alternative.AddUtilityTerm(54, (homeCount > 0)? 1 : 0); //GV: can be estimated but the valus is huge 
