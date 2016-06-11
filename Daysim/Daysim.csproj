@@ -354,10 +354,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ParkAndRideNodeDao.cs" />
-    <Compile Include="Settings\ParkAndRideShadowPricing\ParkAndRideShadowPriceCalculator.cs" />
-    <Compile Include="Settings\ParkAndRideShadowPricing\ParkAndRideShadowPriceWriter.cs" />
-    <Compile Include="Settings\ParkAndRideShadowPricing\ParkAndRideShadowPriceReader.cs" />
-    <Compile Include="Settings\ParkAndRideShadowPricing\ParkAndRideShadowPriceNode.cs" />
+    <Compile Include="ParkAndRideShadowPricing\ParkAndRideShadowPriceCalculator.cs" />
+    <Compile Include="ParkAndRideShadowPricing\ParkAndRideShadowPriceWriter.cs" />
+    <Compile Include="ParkAndRideShadowPricing\ParkAndRideShadowPriceReader.cs" />
+    <Compile Include="ParkAndRideShadowPricing\ParkAndRideShadowPriceNode.cs" />
     <Compile Include="DomainModels\Persisters\PersonPersister.cs" />
     <Compile Include="RawConverter.cs" />
     <Compile Include="AggregateLogsums\AggregateLogsumsExporter.cs" />
