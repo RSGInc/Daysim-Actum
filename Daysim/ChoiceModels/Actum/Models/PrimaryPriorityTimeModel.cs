@@ -272,6 +272,9 @@ namespace Daysim.ChoiceModels.Actum.Models {
 					// at-home logsum works
 					pfptComponent.AddUtilityTerm(16, compositeLogsum);
 
+					//pfpt constant
+					pfptComponent.AddUtilityTerm(51, 1);
+
 				}
 			}
 			for (var jointTourFlag = 0; jointTourFlag < 2; jointTourFlag++) {
@@ -314,6 +317,9 @@ namespace Daysim.ChoiceModels.Actum.Models {
 					// GV, sep. 1st - it is not significant 
 					//jointComponent.AddUtilityTerm(41, compositeLogsum);
 
+					// joint non-mandatory tour constant
+					jointComponent.AddUtilityTerm(61, 1);
+
 				}
 			}
 
@@ -347,15 +353,7 @@ namespace Daysim.ChoiceModels.Actum.Models {
 						//alternative.AddUtilityTerm(40, 1);
 					}
 
-					if (pfpt == 0 && jointTourFlag == 0) {
-					}
-					else if (pfpt == 1 && jointTourFlag == 0) {
-						alternative.AddUtilityTerm(51, 1);
-					}
-					else if (pfpt == 0 && jointTourFlag == 1) {
-						alternative.AddUtilityTerm(61, 1);
-					}
-					else if (pfpt == 1 && jointTourFlag == 1) {
+					if (pfpt == 1 && jointTourFlag == 1) {
 						alternative.AddUtilityTerm(71, 1);
 						//alternative.AddUtilityTerm(72, (householdDay.Household.Size == 2 && householdDay.AdultsInSharedHomeStay == 2).ToFlag());
 
