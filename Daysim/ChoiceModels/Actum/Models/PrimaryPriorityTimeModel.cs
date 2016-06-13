@@ -319,7 +319,7 @@ namespace Daysim.ChoiceModels.Actum.Models {
 
 					// joint non-mandatory tour constant
 					jointComponent.AddUtilityTerm(61, 1);
-
+                     
 				}
 			}
 
@@ -358,7 +358,8 @@ namespace Daysim.ChoiceModels.Actum.Models {
 						//alternative.AddUtilityTerm(72, (householdDay.Household.Size == 2 && householdDay.AdultsInSharedHomeStay == 2).ToFlag());
 
 						// GV: comented out sep. 1st    
-						alternative.AddUtilityTerm(73, householdDay.Household.HasChildren.ToFlag());
+						//GV: coeff. 73 is with a wrong sign - 13. june 2016
+                        //alternative.AddUtilityTerm(73, householdDay.Household.HasChildren.ToFlag());
 						//alternative.AddUtilityTerm(74, householdDay.Household.HasChildrenUnder16.ToFlag());
 					}
 

@@ -187,7 +187,7 @@ namespace Daysim.ChoiceModels.Actum.Models {
             alternative.Choice = 2;
 
             alternative.AddUtilityTerm(22, person.IsRetiredAdult.ToFlag());
-            alternative.AddUtilityTerm(23, person.IsNonworkingAdult.ToFlag());
+            alternative.AddUtilityTerm(23, person.IsNonworkingAdult.ToFlag());  
 
             //GV: not sign. 10. june 2016
             //alternative.AddUtilityTerm(24, householdDay.Household.HasChildrenUnder5.ToFlag());

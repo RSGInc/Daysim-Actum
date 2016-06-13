@@ -1254,7 +1254,7 @@ namespace Daysim.ChoiceModels.Actum.Models {
 							alternative.AddUtilityComponent(choiceProbabilityCalculator.GetUtilityComponent(component1[purp, p, currentBatch]));
 
 							//alternatives position-purpose matches current purpose; note this position in current component position for component types 2 and 3  
-							componentP[componentPosition] = p;
+							componentP[componentPosition] = p; 
 							componentPosition++;
 						}
 					}
