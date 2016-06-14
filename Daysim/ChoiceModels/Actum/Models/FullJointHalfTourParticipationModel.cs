@@ -267,12 +267,15 @@ namespace Daysim.ChoiceModels.Actum.Models {
 				choiceProbabilityCalculator.GetUtilityComponent(componentPerson[p]).AddUtilityTerm(2, pAdultNonMandatory[p]); // impact of adult with non-mandatory travel 
 
 				choiceProbabilityCalculator.GetUtilityComponent(componentPerson[p]).AddUtilityTerm(3, pType8Mandatory[p]); // impact of child under 5 with mandatory travel
-				choiceProbabilityCalculator.GetUtilityComponent(componentPerson[p]).AddUtilityTerm(4, pType8NonMandatory[p]); // impact of child under 5 with non-mandatory travel
+				//GV: not significant, 14. june 2016 
+                //choiceProbabilityCalculator.GetUtilityComponent(componentPerson[p]).AddUtilityTerm(4, pType8NonMandatory[p]); // impact of child under 5 with non-mandatory travel
 
 				//choiceProbabilityCalculator.GetUtilityComponent(componentPerson[p]).AddUtilityTerm(04, pYouthMandatory[p]); // impact of youth with mandatory travel
 				//choiceProbabilityCalculator.GetUtilityComponent(componentPerson[p]).AddUtilityTerm(05, pYouthNonMandatory[p]); // impact of youth with non-mandatory travel
 				choiceProbabilityCalculator.GetUtilityComponent(componentPerson[p]).AddUtilityTerm(5, pType7Mandatory[p]); // impact of Child5-16 with mandatory travel
-				choiceProbabilityCalculator.GetUtilityComponent(componentPerson[p]).AddUtilityTerm(6, pType7NonMandatory[p]); // impact of Child5-16 with non-mandatory travel
+
+                //GV: not significant, 14. june 2016
+                //choiceProbabilityCalculator.GetUtilityComponent(componentPerson[p]).AddUtilityTerm(6, pType7NonMandatory[p]); // impact of Child5-16 with non-mandatory travel
 
 				choiceProbabilityCalculator.GetUtilityComponent(componentPerson[p]).AddUtilityTerm(7, pAdultFemale[p]); //female
 
@@ -332,7 +335,9 @@ namespace Daysim.ChoiceModels.Actum.Models {
 					componentMatch[t1, t2] = componentIndex;
 					choiceProbabilityCalculator.CreateUtilityComponent(componentMatch[t1, t2]);
 					choiceProbabilityCalculator.GetUtilityComponent(componentMatch[t1, t2]).AddUtilityTerm(21, iMatchAgeUnder5[t1, t2]);
-					choiceProbabilityCalculator.GetUtilityComponent(componentMatch[t1, t2]).AddUtilityTerm(22, iMatchAge5to16[t1, t2]);
+					
+                    //GV: 14. jine 2016, not sign.
+                    //choiceProbabilityCalculator.GetUtilityComponent(componentMatch[t1, t2]).AddUtilityTerm(22, iMatchAge5to16[t1, t2]);
 
 					//choiceProbabilityCalculator.GetUtilityComponent(componentMatch[t1, t2]).AddUtilityTerm(23, iMatchAdultMandatoryAndAdultMandatory[t1, t2]);
 					//choiceProbabilityCalculator.GetUtilityComponent(componentMatch[t1, t2]).AddUtilityTerm(24, iMatchAdultNonMandatoryAndAdultNonMandatory[t1, t2]);
@@ -401,7 +406,8 @@ namespace Daysim.ChoiceModels.Actum.Models {
 
 						//choiceProbabilityCalculator.GetUtilityComponent(componentCross[t1, t2]).AddUtilityTerm(43, iCrossAdultMandatoryAndAdultNonMandatory[t1, t2]);
 
-						choiceProbabilityCalculator.GetUtilityComponent(componentCross[t1, t2]).AddUtilityTerm(46, iCrossAdultFemaleWithChildUnder5[t1, t2]);
+						//GV: 14. june 2016, not sign.
+                        //choiceProbabilityCalculator.GetUtilityComponent(componentCross[t1, t2]).AddUtilityTerm(46, iCrossAdultFemaleWithChildUnder5[t1, t2]);
 
 						//choiceProbabilityCalculator.GetUtilityComponent(componentCross[t1, t2]).AddUtilityTerm(47, iCrossYouthAndChildUnder5[t1, t2]);
 						choiceProbabilityCalculator.GetUtilityComponent(componentCross[t1, t2]).AddUtilityTerm(47, iCrossChild5to16AndChildUnder5[t1, t2]);
@@ -522,7 +528,7 @@ namespace Daysim.ChoiceModels.Actum.Models {
 						if (altParticipants[alt][t1] == 1 && altParticipants[alt][t2] == 1) {
 							alternative.AddUtilityComponent(choiceProbabilityCalculator.GetUtilityComponent(componentMatch[t1, t2]));
 
-						}
+						} 
 					}
 				}
 				for (var t2 = 1; t2 <= 5; t2++) {
