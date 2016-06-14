@@ -228,7 +228,7 @@ namespace Daysim.ChoiceModels.Actum.Models {
 			alternative.AddUtilityTerm(31, 1);
 
 			alternative.AddUtilityTerm(12, workTourLogsum);
-			//alternative.AddUtilityTerm(13, schoolTourLogsum);
+			//alternative.AddUtilityTerm(13, schoolTourLogsum); 
 
 			//alternative.AddUtilityTerm(33, householdDay.PrimaryPriorityTimeFlag);
 
@@ -240,7 +240,9 @@ namespace Daysim.ChoiceModels.Actum.Models {
 			alternative.AddUtilityTerm(41, 1);
 
 			alternative.AddUtilityTerm(42, workTourLogsum);
-			alternative.AddUtilityTerm(43, schoolTourLogsum);
+			
+            //GV: 14. june 2016 - not sign. and wrong sign
+            //alternative.AddUtilityTerm(43, schoolTourLogsum);
 
 			alternative.AddUtilityTerm(44, householdDay.PrimaryPriorityTimeFlag);
 
