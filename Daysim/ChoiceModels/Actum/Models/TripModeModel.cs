@@ -46,7 +46,8 @@ namespace Daysim.ChoiceModels.Actum.Models
 		// 1 works: bike, walk and PT in one and all 3 car modes in one. Theta is estimated to 0.33 and significant
 		private readonly int[] _nestedAlternativeIds = new[] {0, 19, 19, 20, 20, 20, 19, 0, 0};
 		private readonly int[] _nestedAlternativeIndexes = new[] {0, 1, 1, 2, 2, 2, 1, 0, 0};
-		// 2 works: bike&walk in one, PT alone, CD1 (SOV) alone, and 2 car-Pass modes in one. Theta is estimated to 0.93 and significant
+		
+        // 2 works: bike&walk in one, PT alone, CD1 (SOV) alone, and 2 car-Pass modes in one. Theta is estimated to 0.93 and significant
 		// Structure-1 works much better than Structure-2
 		//private readonly int[] _nestedAlternativeIds = new[] { 0, 19, 19, 21, 20, 20, 22, 0, 0 };
 		//private readonly int[] _nestedAlternativeIndexes = new[] { 0, 1, 1, 0, 2, 2, 0, 0, 0 };
@@ -236,7 +237,7 @@ namespace Daysim.ChoiceModels.Actum.Models
 			var HHwithChildrenFlag = household.HasChildren.ToFlag();
 			var HHwithSmallChildrenFlag = household.HasChildrenUnder5.ToFlag();
 			var childrenAge5Through15 = householdTotals.ChildrenAge5Through15;
-			var HHwithLowIncomeFlag = (household.Income >= 300000 && household.Income < 600000).ToFlag();
+            var HHwithLowIncomeFlag = (household.Income >= 300000 && household.Income < 600000).ToFlag();
 			var HHwithMidleIncomeFlag = (household.Income >= 600000 && household.Income < 900000).ToFlag();
 			var HHwithHighIncomeFlag = (household.Income >= 900000).ToFlag();
 			var nonworkingAdults = householdTotals.NonworkingAdults;
@@ -431,9 +432,10 @@ namespace Daysim.ChoiceModels.Actum.Models
 					alternative.AddUtilityTerm(20, 1);
 					alternative.AddUtilityTerm(22, carsLessThanDriversFlag);
 
-					alternative.AddUtilityTerm(54, HHwithLowIncomeFlag);
-					alternative.AddUtilityTerm(55, HHwithMidleIncomeFlag);
-					alternative.AddUtilityTerm(56, HHwithHighIncomeFlag);
+					//GV: income is not sign. 22. june 2016
+                    //alternative.AddUtilityTerm(54, HHwithLowIncomeFlag);
+					//alternative.AddUtilityTerm(55, HHwithMidleIncomeFlag);
+					//alternative.AddUtilityTerm(56, HHwithHighIncomeFlag);
 
 					alternative.AddUtilityTerm(57, PTpass);
 
@@ -553,7 +555,7 @@ namespace Daysim.ChoiceModels.Actum.Models
 					alternative.AddUtilityTerm(104, (bikeTourFlag * firstTripOnFirstHalfFlag));
 					alternative.AddUtilityTerm(105, (bikeTourFlag * firstTripOnSecondHalfFlag));
 					alternative.AddUtilityTerm(106, (bikeTourFlag * lastTripOnFirstHalfFlag));
-					alternative.AddUtilityTerm(107, (bikeTourFlag * lastTripOnSecondHalfFlag));
+					alternative.AddUtilityTerm(107, (bikeTourFlag * lastTripOnSecondHalfFlag)); 
 
 					alternative.AddUtilityTerm(127, transitTourFlag);
 					alternative.AddUtilityTerm(130, CarDrivNotAloneFlag);

@@ -189,7 +189,7 @@ namespace Daysim.ChoiceModels.Actum.Models {
 			alternative.AddUtilityTerm(21, 1);
 
             //GV: NEW
-            //alternative.AddUtilityTerm(22, householdDay.PrimaryPriorityTimeFlag);
+            alternative.AddUtilityTerm(22, householdDay.PrimaryPriorityTimeFlag);
             alternative.AddUtilityTerm(23, (householdDay.Household.Size == 3).ToFlag());
             alternative.AddUtilityTerm(24, (householdDay.Household.Size >= 4).ToFlag());
             alternative.AddUtilityTerm(28, (householdDay.Household.VehiclesAvailable >= 2 && household.Has2Drivers).ToFlag());
@@ -220,7 +220,7 @@ namespace Daysim.ChoiceModels.Actum.Models {
 			alternative.AddUtilityTerm(31, 1);
 
             //GV: NEW
-            //alternative.AddUtilityTerm(32, householdDay.PrimaryPriorityTimeFlag);
+            alternative.AddUtilityTerm(32, householdDay.PrimaryPriorityTimeFlag);
             alternative.AddUtilityTerm(33, (householdDay.Household.Size == 3).ToFlag());
             alternative.AddUtilityTerm(34, (householdDay.Household.Size >= 4).ToFlag());
             alternative.AddUtilityTerm(37, (householdDay.Household.VehiclesAvailable == 1 && household.Has2Drivers).ToFlag());
@@ -262,7 +262,8 @@ namespace Daysim.ChoiceModels.Actum.Models {
 			alternative = choiceProbabilityCalculator.GetAlternative(Global.Settings.Purposes.Social, true, choice == Global.Settings.Purposes.Social);
 			alternative.Choice = Global.Settings.Purposes.Social;
 
-			alternative.AddUtilityTerm(41, 1);
+			//GV: John's mail 16. june 2016, coeff 41 constrained to 0
+            alternative.AddUtilityTerm(41, 1);
 
             //GV: NEW
             //alternative.AddUtilityTerm(42, householdDay.PrimaryPriorityTimeFlag);

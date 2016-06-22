@@ -24,7 +24,7 @@ using HouseholdWrapper = Daysim.DomainModels.Default.Wrappers.HouseholdWrapper;
 using PersonDayWrapper = Daysim.DomainModels.Default.Wrappers.PersonDayWrapper;
 using PersonWrapper = Daysim.DomainModels.Default.Wrappers.PersonWrapper;
 using TourWrapper = Daysim.DomainModels.Default.Wrappers.TourWrapper;
-using TripWrapper = Daysim.DomainModels.Default.Wrappers.TripWrapper;
+using TripWrapper = Daysim.DomainModels.Default.Wrappers.TripWrapper; 
 
 namespace Daysim.ChoiceModels.Actum.Models {
 	public class IntermediateStopLocationModel : ChoiceModel {

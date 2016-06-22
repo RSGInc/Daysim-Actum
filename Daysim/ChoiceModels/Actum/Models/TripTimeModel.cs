@@ -289,7 +289,7 @@ namespace Daysim.ChoiceModels.Actum.Models {
 				//alternative.AddUtilityTerm(62, jointTourFlag * durationShiftHours);
 				//alternative.AddUtilityTerm(64, partialHalfTourFlag * durationShiftHours);
 				//alternative.AddUtilityTerm(66, fullHalfTourFlag * durationShiftHours);
-				alternative.AddUtilityTerm(68, primaryFamilyTimeFlag * durationShiftHours);
+				alternative.AddUtilityTerm(68, primaryFamilyTimeFlag * durationShiftHours); 
 				
 				alternative.AddUtilityTerm(132, workTourFlag * halfTourFromOriginFlag * durationShiftHours);
 				alternative.AddUtilityTerm(134, workTourFlag * halfTourFromDestinationFlag * durationShiftHours);
