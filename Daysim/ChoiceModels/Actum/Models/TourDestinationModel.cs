@@ -353,9 +353,12 @@ namespace Daysim.ChoiceModels.Actum.Models {
 				//alternative.AddUtilityTerm(277, person.IsChildAge5Through15.ToFlag() * distanceFromOriginLog); // commented out by GV, July 7th
 				//alternative.AddUtilityTerm(278, person.IsChildUnder16.ToFlag() * distanceFromOriginLog); // commented out by GV, July 7th
 				alternative.AddUtilityTerm(279, person.IsUniversityStudent.ToFlag() * distanceFromOriginLog);
-				alternative.AddUtilityTerm(280, person.IsAdultMale.ToFlag() * distanceFromOriginLog);
+				
+                //GV: 17. june 2015 male commented out
+                //alternative.AddUtilityTerm(280, person.IsAdultMale.ToFlag() * distanceFromOriginLog);
 				alternative.AddUtilityTerm(281, person.IsAdultFemale.ToFlag() * distanceFromOriginLog);
-				alternative.AddUtilityTerm(282, person.IsRetiredAdult.ToFlag() * distanceFromOriginLog);
+				
+                alternative.AddUtilityTerm(282, person.IsRetiredAdult.ToFlag() * distanceFromOriginLog);
 
 				//alternative.AddUtilityTerm(283, (tour.IsHomeBasedTour).ToFlag() * timePressure); //commented out by GV: 7th July 2013
 				alternative.AddUtilityTerm(284, (tour.IsHomeBasedTour).ToFlag() * distanceFromSchoolLog);
@@ -393,7 +396,8 @@ namespace Daysim.ChoiceModels.Actum.Models {
 					alternative.AddUtilityTerm(14, piecewiseDistanceFrom10To20Km);
 					alternative.AddUtilityTerm(15, piecewiseDistanceFrom20KmToInfinity);
 
-					alternative.AddUtilityTerm(16, aggregateLogsumWorkBased);
+                    //GV: june 2016 - not sign
+                    //alternative.AddUtilityTerm(16, aggregateLogsumWorkBased);
 
 					// Neighborhood
 					//GV: commented out just temp.
@@ -402,10 +406,10 @@ namespace Daysim.ChoiceModels.Actum.Models {
 					//alternative.AddUtilityTerm(22, logOfOnePlusEmploymentEducationBuffer2);
 					alternative.AddUtilityTerm(23, logOfOnePlusEmploymentGovernmentBuffer2);
 					//alternative.AddUtilityTerm(24, logOfOnePlusEmploymentIndustrialBuffer2);
-					alternative.AddUtilityTerm(25, logOfOnePlusEmploymentOfficeBuffer2);
-					alternative.AddUtilityTerm(26, logOfOnePlusEmploymentRetailBuffer2);
+					//alternative.AddUtilityTerm(25, logOfOnePlusEmploymentOfficeBuffer2);
+					//alternative.AddUtilityTerm(26, logOfOnePlusEmploymentRetailBuffer2);
 					alternative.AddUtilityTerm(27, logOfOnePlusEmploymentServiceBuffer2);
-					alternative.AddUtilityTerm(28, logOfOnePlusEmploymentAgrConstrBuffer2);
+					//alternative.AddUtilityTerm(28, logOfOnePlusEmploymentAgrConstrBuffer2);
 					//alternative.AddUtilityTerm(29, logOfOnePlusEmploymentJobsBuffer2);
 
 					// Size terms
@@ -430,7 +434,8 @@ namespace Daysim.ChoiceModels.Actum.Models {
 					alternative.AddUtilityTerm(55, piecewiseDistanceFrom10KmToInfinity);
 					//alternative.AddUtilityTerm(55, piecewiseDistanceFrom20KmToInfinity);
 
-					alternative.AddUtilityTerm(56, aggregateLogsumHomeBased);
+                    //GV: june 2016 - not sign
+					//alternative.AddUtilityTerm(56, aggregateLogsumHomeBased);
 
 					// Neighborhood
 					//GV: commented out just temp.
@@ -468,10 +473,10 @@ namespace Daysim.ChoiceModels.Actum.Models {
 					//alternative.AddUtilityTerm(91, piecewiseDistanceFrom1To2Km);
 					alternative.AddUtilityTerm(92, piecewiseDistanceFrom2To5Km);
 					alternative.AddUtilityTerm(93, piecewiseDistanceFrom5To10Km);
-					alternative.AddUtilityTerm(94, piecewiseDistanceFrom10To20Km);
-					alternative.AddUtilityTerm(95, piecewiseDistanceFrom20KmToInfinity);
+					alternative.AddUtilityTerm(95, piecewiseDistanceFrom10KmToInfinity);
 
-					alternative.AddUtilityTerm(96, aggregateLogsumHomeBased);
+                    //GV: june 2016 - not sign
+                    //alternative.AddUtilityTerm(96, aggregateLogsumHomeBased);
 
 					// Neighborhood
 					//GV: commented out just temp.
@@ -504,7 +509,8 @@ namespace Daysim.ChoiceModels.Actum.Models {
 					alternative.AddUtilityTerm(124, piecewiseDistanceFrom10To20Km);
 					alternative.AddUtilityTerm(125, piecewiseDistanceFrom20KmToInfinity);
 
-					alternative.AddUtilityTerm(126, aggregateLogsumHomeBased);
+                    //GV: june 2016 - not sign
+					//alternative.AddUtilityTerm(126, aggregateLogsumHomeBased);
 
 					// Neighborhood
 					//GV: commented out just temp.
@@ -528,7 +534,8 @@ namespace Daysim.ChoiceModels.Actum.Models {
 					alternative.AddUtilityTerm(174, piecewiseDistanceFrom10To20Km);
 					alternative.AddUtilityTerm(175, piecewiseDistanceFrom20KmToInfinity);
 
-					alternative.AddUtilityTerm(176, aggregateLogsumHomeBased);
+                    //GV: june 2016 - not sign
+                    //alternative.AddUtilityTerm(176, aggregateLogsumHomeBased);
 
 					// Neighborhood
 					//GV: commented out just temp.

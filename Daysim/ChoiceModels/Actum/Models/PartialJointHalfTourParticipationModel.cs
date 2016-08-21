@@ -13,7 +13,7 @@ using Daysim.DomainModels.Default;
 using Daysim.DomainModels.Default.Wrappers;
 using Daysim.Framework.ChoiceModels;
 using Daysim.Framework.Coefficients;
-using Daysim.Framework.Core;
+using Daysim.Framework.Core; 
 
 namespace Daysim.ChoiceModels.Actum.Models {
 	public class PartialJointHalfTourParticipationModel : ChoiceModel {

@@ -162,28 +162,36 @@ namespace Daysim.ChoiceModels.Actum.Models {
 
 			// 1 Works at home
 			alternative = choiceProbabilityCalculator.GetAlternative(1, true, choice == 1);
-			alternative.Choice = 1;
+			alternative.Choice = 1; 
 
 			alternative.AddUtilityTerm(1, 1.0);
 
 			alternative.AddUtilityTerm(2, householdDay.Household.HasChildrenUnder5.ToFlag());
-			alternative.AddUtilityTerm(3, householdDay.Household.HasChildrenAge5Through15.ToFlag());
-			alternative.AddUtilityTerm(4, (householdDay.Household.Size == 2 && householdDay.AdultsInSharedHomeStay == 2).ToFlag());
+			
+            //GV: not sign. - 13. june 2016
+            //alternative.AddUtilityTerm(3, householdDay.Household.HasChildrenAge5Through15.ToFlag());
+			
+            alternative.AddUtilityTerm(4, (householdDay.Household.Size == 2 && householdDay.AdultsInSharedHomeStay == 2).ToFlag());
 			alternative.AddUtilityTerm(5, (householdDay.AdultsInSharedHomeStay == 1 && householdDay.Household.HasChildrenUnder16).ToFlag());
-			alternative.AddUtilityTerm(6, (householdDay.AdultsInSharedHomeStay == 2 && householdDay.Household.HouseholdTotals.FullAndPartTimeWorkers >= 2).ToFlag());
-			alternative.AddUtilityTerm(7, (householdDay.AdultsInSharedHomeStay == 2 && hasAdultEducLevel12 == 1).ToFlag());
-			alternative.AddUtilityTerm(8, (youngestAge >= 40).ToFlag());
 
-			alternative.AddUtilityTerm(10, (householdDay.Household.Income >= 300000 && householdDay.Household.Income < 600000).ToFlag());
-			alternative.AddUtilityTerm(11, (householdDay.Household.Income >= 600000 && householdDay.Household.Income < 900000).ToFlag());
-			alternative.AddUtilityTerm(12, (householdDay.Household.Income >= 900000).ToFlag());
+            //GV: not sign. - 13. june 2016
+            //alternative.AddUtilityTerm(6, (householdDay.AdultsInSharedHomeStay == 2 && householdDay.Household.HouseholdTotals.FullAndPartTimeWorkers >= 2).ToFlag());
+			//alternative.AddUtilityTerm(7, (householdDay.AdultsInSharedHomeStay == 2 && hasAdultEducLevel12 == 1).ToFlag());
+			
+            alternative.AddUtilityTerm(8, (youngestAge >= 40).ToFlag());
+
+            //GV: not sign. - 13. june 2016
+            //alternative.AddUtilityTerm(10, (householdDay.Household.Income >= 300000 && householdDay.Household.Income < 600000).ToFlag());
+			//alternative.AddUtilityTerm(11, (householdDay.Household.Income >= 600000 && householdDay.Household.Income < 900000).ToFlag());
+			//alternative.AddUtilityTerm(12, (householdDay.Household.Income >= 900000).ToFlag());
 
 			alternative.AddUtilityTerm(15, householdDay.PrimaryPriorityTimeFlag);
 
-			alternative.AddUtilityTerm(16, (householdDay.Household.Size == 2).ToFlag());
-			alternative.AddUtilityTerm(17, (householdDay.Household.Size == 3).ToFlag());
-			alternative.AddUtilityTerm(18, (householdDay.Household.Size >= 4).ToFlag());
-			//alternative.AddUtilityTerm(18, (householdDay.Household.Size >= 5).ToFlag()); 
+            //GV: not sign. - 13. june 2016
+            //alternative.AddUtilityTerm(16, (householdDay.Household.Size == 2).ToFlag());
+			//alternative.AddUtilityTerm(17, (householdDay.Household.Size == 3).ToFlag());
+			//alternative.AddUtilityTerm(18, (householdDay.Household.Size >= 4).ToFlag());
+			////alternative.AddUtilityTerm(18, (householdDay.Household.Size >= 5).ToFlag()); 
 
 			alternative.AddUtilityTerm(21, personDay.Person.IsPartTimeWorker.ToFlag());
 			//alternative.AddUtilityTerm(2, personDay.Person.IsFulltimeWorker.ToFlag());
@@ -198,10 +206,12 @@ namespace Daysim.ChoiceModels.Actum.Models {
 
 			//alternative.AddUtilityTerm(27, workTourLogsum);
 
-			//alternative.AddUtilityTerm(26, workTourLogsum * MandatoryTourDay);
-			//alternative.AddUtilityTerm(27, workTourLogsum * nonMandatoryTourDay);
+            //GV: put in instead of compositeLogsum - 13. june 2016
+			alternative.AddUtilityTerm(27, workTourLogsum * MandatoryTourDay);
+			alternative.AddUtilityTerm(28, workTourLogsum * nonMandatoryTourDay);
 
-			alternative.AddUtilityTerm(27, compositeLogsum);
+            //GV: not sign. - 13. june 2016
+			//alternative.AddUtilityTerm(27, compositeLogsum);
 
 			//alternative.AddUtilityTerm(27, (householdDay.Household.VehiclesAvailable == 1 && household.Has2Drivers).ToFlag()); //GV not significant
 			//alternative.AddUtilityTerm(28, (householdDay.Household.VehiclesAvailable >= 2 && household.Has2Drivers).ToFlag()); //GV not significant

@@ -34,7 +34,7 @@ namespace Daysim.ChoiceModels.Actum.Models {
 			}
 
 			// array associating alternative with the participation of each HH person in the joint half tour
-			//  also identifies minimum housheold size and number of participants for each alternative 
+			//  also identifies minimum housheold size and number of participants for each alternative  
 			//[alt,p1,p2,p3,p4,p5,p6,p7,p8,MinHHSize,numPart]
 			int[][] altParticipants = new int[32][];
 			altParticipants[0] = new int[] { 0, 0, 0, 0, 0, 0, 2, 0 };
@@ -266,7 +266,8 @@ namespace Daysim.ChoiceModels.Actum.Models {
 				choiceProbabilityCalculator.GetUtilityComponent(componentPerson[p]).AddUtilityTerm(5, pType7Mandatory[p]); // impact of Child5-16 with mandatory travel
 				choiceProbabilityCalculator.GetUtilityComponent(componentPerson[p]).AddUtilityTerm(6, pType7NonMandatory[p]); // impact of Child5-16 with non-mandatory travel
 
-				choiceProbabilityCalculator.GetUtilityComponent(componentPerson[p]).AddUtilityTerm(7, pAdultFemale[p]); //female
+                //GV: 16. june, not sign
+				//choiceProbabilityCalculator.GetUtilityComponent(componentPerson[p]).AddUtilityTerm(7, pAdultFemale[p]); //female
 
 			}
 
@@ -386,15 +387,17 @@ namespace Daysim.ChoiceModels.Actum.Models {
 						componentCross[t1, t2] = componentIndex;
 						choiceProbabilityCalculator.CreateUtilityComponent(componentCross[t1, t2]);
 
-						choiceProbabilityCalculator.GetUtilityComponent(componentCross[t1, t2]).AddUtilityTerm(41, iCrossAdultWithChildUnder5[t1, t2]);
-						choiceProbabilityCalculator.GetUtilityComponent(componentCross[t1, t2]).AddUtilityTerm(42, iCrossAdultWithChild5to16[t1, t2]);
+                        //GV: 16. june 2016 - not sign.
+						//choiceProbabilityCalculator.GetUtilityComponent(componentCross[t1, t2]).AddUtilityTerm(41, iCrossAdultWithChildUnder5[t1, t2]);
+						//choiceProbabilityCalculator.GetUtilityComponent(componentCross[t1, t2]).AddUtilityTerm(42, iCrossAdultWithChild5to16[t1, t2]);
 
 						//choiceProbabilityCalculator.GetUtilityComponent(componentCross[t1, t2]).AddUtilityTerm(43, iCrossAdultMandatoryAndAdultNonMandatory[t1, t2]);
 
 						choiceProbabilityCalculator.GetUtilityComponent(componentCross[t1, t2]).AddUtilityTerm(46, iCrossAdultFemaleWithChildUnder5[t1, t2]);
 
 						//choiceProbabilityCalculator.GetUtilityComponent(componentCross[t1, t2]).AddUtilityTerm(47, iCrossYouthAndChildUnder5[t1, t2]);
-						choiceProbabilityCalculator.GetUtilityComponent(componentCross[t1, t2]).AddUtilityTerm(47, iCrossChild5to16AndChildUnder5[t1, t2]);
+                        //GV: 16. june 2016 - not sign.
+                        //choiceProbabilityCalculator.GetUtilityComponent(componentCross[t1, t2]).AddUtilityTerm(47, iCrossChild5to16AndChildUnder5[t1, t2]);
 
 						//choiceProbabilityCalculator.GetUtilityComponent(componentCross[t1, t2]).AddUtilityTerm(45, iCrossAdultFemaleWithChild5to16[t1, t2]);
 

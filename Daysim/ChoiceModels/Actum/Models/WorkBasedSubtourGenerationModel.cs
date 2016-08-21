@@ -125,7 +125,7 @@ namespace Daysim.ChoiceModels.Actum.Models {
 
 			//alternative.AddUtilityTerm(15, (person.IsNonworkingAdult).ToFlag()); //out of scope, non available
 
-			//alternative.AddUtilityTerm(32, workAggregateLogsum);
+			//alternative.AddUtilityTerm(32, workAggregateLogsum); 
 			//alternative.AddUtility(32, mixedUseIndex); 
 
 			// WORK-BASED
@@ -142,21 +142,25 @@ namespace Daysim.ChoiceModels.Actum.Models {
 			//alternative.AddUtilityTerm(23, (person.EducationLevel >= 12).ToFlag());
 
 			//alternative.AddUtilityTerm(24, personDay.Person.IsPartTimeWorker.ToFlag());
-			alternative.AddUtilityTerm(24, (person.WorksAtHome).ToFlag());
-			//alternative.AddUtilityTerm(25, personDay.Person.IsFulltimeWorker.ToFlag());
-			alternative.AddUtilityTerm(26, (person.MainOccupation == 50).ToFlag()); // self employed
+			
+            //GV, 16. june 2016 - cannot be estimated
+            //alternative.AddUtilityTerm(24, (person.WorksAtHome).ToFlag());
+			////alternative.AddUtilityTerm(25, personDay.Person.IsFulltimeWorker.ToFlag());
+			//alternative.AddUtilityTerm(26, (person.MainOccupation == 50).ToFlag()); // self employed
 
 			alternative.AddUtilityTerm(27, (personDay.Person.Gender == 1).ToFlag());
 			//alternative.AddUtilityTerm(44, (hasAdultEducLevel12 == 1).ToFlag());
 
-			alternative.AddUtilityTerm(28, (householdDay.Household.VehiclesAvailable == 1 && householdDay.Household.Has2Drivers).ToFlag());
-			alternative.AddUtilityTerm(29, (householdDay.Household.VehiclesAvailable >= 2 && householdDay.Household.Has2Drivers).ToFlag());
+			//GV. 16. june 2016 - not signif.
+            //alternative.AddUtilityTerm(28, (householdDay.Household.VehiclesAvailable == 1 && householdDay.Household.Has2Drivers).ToFlag());
+			//alternative.AddUtilityTerm(29, (householdDay.Household.VehiclesAvailable >= 2 && householdDay.Household.Has2Drivers).ToFlag());
 
 			alternative.AddUtilityTerm(30, householdDay.PrimaryPriorityTimeFlag);
 
-			alternative.AddUtilityTerm(31, (householdDay.Household.Income >= 300000 && householdDay.Household.Income < 600000).ToFlag());
-			alternative.AddUtilityTerm(32, (householdDay.Household.Income >= 600000 && householdDay.Household.Income < 900000).ToFlag());
-			alternative.AddUtilityTerm(33, (householdDay.Household.Income >= 900000).ToFlag());
+            //GV. 16. june 2016 - not signif.
+			//alternative.AddUtilityTerm(31, (householdDay.Household.Income >= 300000 && householdDay.Household.Income < 600000).ToFlag());
+			//alternative.AddUtilityTerm(32, (householdDay.Household.Income >= 600000 && householdDay.Household.Income < 900000).ToFlag());
+			//alternative.AddUtilityTerm(33, (householdDay.Household.Income >= 900000).ToFlag());
 
 			alternative.AddUtilityTerm(41, workAggregateLogsum);
 

@@ -123,6 +123,9 @@ namespace Daysim.ChoiceModels.Actum.Models {
 
 			//alternative.AddNestedAlternative(11, 0, 60); 
 
+            //GV: added 14. june 2016
+            alternative.AddUtilityTerm(4, householdDay.PrimaryPriorityTimeFlag);
+            //alternative.AddUtilityTerm(5, (householdDay.Household.VehiclesAvailable >= 1).ToFlag());
 
 			// Business stop(s)
 			alternative = choiceProbabilityCalculator.GetAlternative(1, personDay.Person.IsWorker, choice == 1);
@@ -136,8 +139,10 @@ namespace Daysim.ChoiceModels.Actum.Models {
 			alternative.AddUtilityTerm(25, personDay.Person.IsMale.ToFlag());
 			//alternative.AddUtilityTerm(4, person.IsPartTimeWorker.ToFlag());
 
-			alternative.AddUtilityTerm(26, (householdDay.AdultsInSharedHomeStay == 2 && householdDay.Household.HouseholdTotals.FullAndPartTimeWorkers >= 2).ToFlag());
-			//alternative.AddUtilityTerm(14, (householdDay.AdultsInSharedHomeStay == 2).ToFlag());
+			//GV: 15. june 2016, not sign.
+            //alternative.AddUtilityTerm(26, (householdDay.AdultsInSharedHomeStay == 2 && householdDay.Household.HouseholdTotals.FullAndPartTimeWorkers >= 2).ToFlag());
+			
+            //alternative.AddUtilityTerm(14, (householdDay.AdultsInSharedHomeStay == 2).ToFlag());
 			//alternative.AddUtilityTerm(15, (householdDay.Household.HouseholdTotals.FullAndPartTimeWorkers >= 2).ToFlag());
 			alternative.AddUtilityTerm(27, (householdDay.AdultsInSharedHomeStay == 1 && householdDay.Household.HasChildren).ToFlag());
 
@@ -158,7 +163,8 @@ namespace Daysim.ChoiceModels.Actum.Models {
 			//alternative.AddUtilityTerm(46, personDay.Person.IsMale.ToFlag());
 			alternative.AddUtilityTerm(47, personDay.Person.IsYouth.ToFlag());
 
-			alternative.AddUtilityTerm(48, schoolTourLogsum);
+            //GV: 15. june 2016, not sign.
+            //alternative.AddUtilityTerm(48, schoolTourLogsum); 
 
 
 			// Business and school stops
@@ -166,7 +172,9 @@ namespace Daysim.ChoiceModels.Actum.Models {
 			alternative.Choice = 3;
 			alternative.AddUtilityTerm(61, 1);
 			alternative.AddUtilityTerm(28, workTourLogsum);
-			alternative.AddUtilityTerm(48, schoolTourLogsum);
+
+            //GV: 15. june 2016, not sign.
+            //alternative.AddUtilityTerm(48, schoolTourLogsum);
 
 		}
 	}

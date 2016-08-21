@@ -205,14 +205,18 @@ namespace Daysim.ChoiceModels.Actum.Models {
 
 			//alternative.AddUtilityTerm(32, personDay.Person.IsChildUnder5.ToFlag());
 			alternative.AddUtilityTerm(33, personDay.Person.WorksAtHome.ToFlag());
-			alternative.AddUtilityTerm(34, personDay.Person.IsFulltimeWorker.ToFlag());
-			alternative.AddUtilityTerm(35, personDay.Person.IsMale.ToFlag());
+			
+            alternative.AddUtilityTerm(34, personDay.Person.IsFulltimeWorker.ToFlag());
+            
+            alternative.AddUtilityTerm(35, personDay.Person.IsMale.ToFlag());
 			//alternative.AddUtilityTerm(4, person.IsPartTimeWorker.ToFlag());
 
 			alternative.AddUtilityTerm(36, (householdDay.AdultsInSharedHomeStay == 2 && householdDay.Household.HouseholdTotals.FullAndPartTimeWorkers >= 2).ToFlag());
 			//alternative.AddUtilityTerm(14, (householdDay.AdultsInSharedHomeStay == 2).ToFlag());
 			//alternative.AddUtilityTerm(15, (householdDay.Household.HouseholdTotals.FullAndPartTimeWorkers >= 2).ToFlag());
-			alternative.AddUtilityTerm(37, (householdDay.AdultsInSharedHomeStay == 1 && householdDay.Household.HasChildren).ToFlag());
+
+            //GV: 13. june 2016, not sign.
+            //alternative.AddUtilityTerm(37, (householdDay.AdultsInSharedHomeStay == 1 && householdDay.Household.HasChildren).ToFlag());
 
 			alternative.AddUtilityTerm(38, workTourLogsum);
 
@@ -228,8 +232,10 @@ namespace Daysim.ChoiceModels.Actum.Models {
 			alternative.Choice = 3;
 			alternative.AddUtilityTerm(41, 1);
 
-			alternative.AddUtilityTerm(42, personDay.Person.IsNonworkingAdult.ToFlag());
-			//alternative.AddUtilityTerm(43, personDay.Person.IsPartTimeWorker.ToFlag());
+            //GV: 13. june 2016, not sign.
+            //alternative.AddUtilityTerm(42, personDay.Person.IsNonworkingAdult.ToFlag()); 
+			
+            //alternative.AddUtilityTerm(43, personDay.Person.IsPartTimeWorker.ToFlag());
 			alternative.AddUtilityTerm(43, personDay.Person.IsYouth.ToFlag());
 
 			//alternative.AddUtilityTerm(46, (householdDay.AdultsInSharedHomeStay == 2 && householdDay.Household.HouseholdTotals.FullAndPartTimeWorkers >= 2).ToFlag());
@@ -238,7 +244,8 @@ namespace Daysim.ChoiceModels.Actum.Models {
 			//alternative.AddUtilityTerm(47, (householdDay.AdultsInSharedHomeStay == 1 && householdDay.Household.HasChildren).ToFlag());
 
 			alternative.AddUtilityTerm(48, workTourLogsum);
-			alternative.AddUtilityTerm(49, schoolTourLogsum);
+            //GV: 13. june 2016, not sign.
+            //alternative.AddUtilityTerm(49, schoolTourLogsum);
 
 			//alternative.AddUtilityTerm(48, (householdDay.Household.VehiclesAvailable == 1 && household.Has2Drivers).ToFlag());
 			//alternative.AddUtilityTerm(49, (householdDay.Household.VehiclesAvailable >= 2 && household.Has2Drivers).ToFlag());

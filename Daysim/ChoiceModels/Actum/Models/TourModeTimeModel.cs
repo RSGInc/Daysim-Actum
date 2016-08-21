@@ -245,7 +245,7 @@ namespace Daysim.ChoiceModels.Actum.Models {
 			var retiredAdults = householdTotals.RetiredAdults;
 
 			var onePersonHouseholdFlag = household.IsOnePersonHousehold.ToFlag();
-			var twoPersonHouseholdFlag = household.IsTwoPersonHousehold.ToFlag();
+			var twoPersonHouseholdFlag = household.IsTwoPersonHousehold .ToFlag();
 
 			//var householdCars = household.VehiclesAvailable;
 			var noCarsInHouseholdFlag = household.GetFlagForNoCarsInHousehold(householdCars);
@@ -458,13 +458,19 @@ namespace Daysim.ChoiceModels.Actum.Models {
 
 					modeComponent.AddUtilityTerm(22, PTpass);
 
-					modeComponent.AddUtilityTerm(23, HHwithLowIncomeFlag);
-					modeComponent.AddUtilityTerm(24, HHwithMidleIncomeFlag);
-					modeComponent.AddUtilityTerm(25, HHwithHighIncomeFlag);
+                    //GV: one person HH; 8. juni 2016
+                    //modeComponent.AddUtilityTerm(23, onePersonHouseholdFlag);
 
-					modeComponent.AddUtilityTerm(26, childrenUnder5);
-					modeComponent.AddUtilityTerm(27, childrenAge5Through15);
-					modeComponent.AddUtilityTerm(28, nonworkingAdults + retiredAdults);
+					//GV: income effect is not with a correct sign
+                    //modeComponent.AddUtilityTerm(23, HHwithLowIncomeFlag);
+					//modeComponent.AddUtilityTerm(24, HHwithMidleIncomeFlag);
+					//modeComponent.AddUtilityTerm(25, HHwithHighIncomeFlag);
+
+					//GV: not significant
+                    //modeComponent.AddUtilityTerm(26, childrenUnder5);
+					//modeComponent.AddUtilityTerm(27, childrenAge5Through15);
+					
+                    modeComponent.AddUtilityTerm(28, nonworkingAdults + retiredAdults);
 
 					//modeComponent.AddUtilityTerm(26, noCarsInHouseholdFlag);
 					modeComponent.AddUtilityTerm(29, carsLessThanDriversFlag);
@@ -473,65 +479,85 @@ namespace Daysim.ChoiceModels.Actum.Models {
 					modeComponent.AddUtilityTerm(30, 1);
 					modeComponent.AddUtilityTerm(31, childrenUnder5);
 					modeComponent.AddUtilityTerm(32, childrenAge5Through15);
-					modeComponent.AddUtilityTerm(34, nonworkingAdults + retiredAdults);
-					modeComponent.AddUtilityTerm(35, femaleFlag);
+					modeComponent.AddUtilityTerm(33, nonworkingAdults + retiredAdults);
+					modeComponent.AddUtilityTerm(34, femaleFlag);
 
-					modeComponent.AddUtilityTerm(38, onePersonHouseholdFlag);
-					modeComponent.AddUtilityTerm(39, twoPersonHouseholdFlag);
-					modeComponent.AddUtilityTerm(36, noCarsInHouseholdFlag);
-					modeComponent.AddUtilityTerm(37, carsLessThanDriversFlag);
+					//modeComponent.AddUtilityTerm(38, onePersonHouseholdFlag);
+					modeComponent.AddUtilityTerm(36, twoPersonHouseholdFlag);
+					
+                    //GV: commented out 7. june 2016
+                    //modeComponent.AddUtilityTerm(37, noCarsInHouseholdFlag);
+					modeComponent.AddUtilityTerm(38, carsLessThanDriversFlag);
 				}
 				else if (mode == Global.Settings.Modes.Hov2) {
 					modeComponent.AddUtilityTerm(40, 1);
-					modeComponent.AddUtilityTerm(41, maleFlag);
+					modeComponent.AddUtilityTerm(41, maleFlag); 
 					//modeComponent.AddUtilityTerm(41, onePersonHouseholdFlag);
 
-					//modeComponent.AddUtilityTerm(42, childrenUnder5);
-					//modeComponent.AddUtilityTerm(43, childrenAge5Through15);
-					//modeComponent.AddUtilityTerm(44, nonworkingAdults + retiredAdults);
+					//GV: Testing coeff. 42-44 again, 26. may 2016, coeff. numbering changed
+                    modeComponent.AddUtilityTerm(42, childrenUnder5);
+					modeComponent.AddUtilityTerm(43, childrenAge5Through15);
+					modeComponent.AddUtilityTerm(44, nonworkingAdults + retiredAdults);
 
-					//GV: these are significant and plus
-					modeComponent.AddUtilityTerm(42, HHwithLowIncomeFlag);
-					modeComponent.AddUtilityTerm(43, HHwithMidleIncomeFlag);
-					modeComponent.AddUtilityTerm(44, HHwithHighIncomeFlag);
+					//GV: these are significant and plus; 8. juni 2016
+					//modeComponent.AddUtilityTerm(45, HHwithLowIncomeFlag);
+					//modeComponent.AddUtilityTerm(46, HHwithMidleIncomeFlag); 
+					//modeComponent.AddUtilityTerm(47, HHwithHighIncomeFlag); 
 
-					modeComponent.AddUtilityTerm(46, noCarsInHouseholdFlag);
-					modeComponent.AddUtilityTerm(47, carsLessThanDriversFlag);
+                    //GV coeff. numbering changed; 8. june 2016 - not significant
+					//modeComponent.AddUtilityTerm(48, noCarsInHouseholdFlag);
+					//modeComponent.AddUtilityTerm(49, carsLessThanDriversFlag);
 				}
 				else if (mode == Global.Settings.Modes.Sov) {
 					modeComponent.AddUtilityTerm(50, 1);
-					modeComponent.AddUtilityTerm(51, maleFlag);
+					//not significant: modeComponent.AddUtilityTerm(51, maleFlag);
 					modeComponent.AddUtilityTerm(52, fullTimeWorkerFlag);
 					modeComponent.AddUtilityTerm(53, partTimeWorkerFlag);
 					modeComponent.AddUtilityTerm(54, onePersonHouseholdFlag);
 
-					//GV: these are NOT significant 
-					//modeComponent.AddUtilityTerm(53, HHwithLowIncomeFlag);
-					//modeComponent.AddUtilityTerm(54, HHwithMidleIncomeFlag);
-					//modeComponent.AddUtilityTerm(55, HHwithHighIncomeFlag);
+					//GV: these are NOT significant
+					//modeComponent.AddUtilityTerm(55, HHwithLowIncomeFlag);
+					//modeComponent.AddUtilityTerm(56, HHwithMidleIncomeFlag);
+					//modeComponent.AddUtilityTerm(57, HHwithHighIncomeFlag);
 
-					modeComponent.AddUtilityTerm(57, carsLessThanWorkersFlag);
+                    //GV: coeff. numbering changed, 26. may 2016
+					modeComponent.AddUtilityTerm(58, carsLessThanWorkersFlag);
 				}
 				else if (mode == Global.Settings.Modes.Bike) {
 					modeComponent.AddUtilityTerm(60, 1);
 					modeComponent.AddUtilityTerm(61, femaleFlag);
-					modeComponent.AddUtilityTerm(62, childrenUnder5);
-					modeComponent.AddUtilityTerm(63, childAge5Through15Flag);
+					//modeComponent.AddUtilityTerm(62, childrenUnder5);
+                    //GV: changed small kids to retired; 3. june 2016
+                    modeComponent.AddUtilityTerm(62, retiredAdults);
+                    modeComponent.AddUtilityTerm(63, childAge5Through15Flag);
 
-					modeComponent.AddUtilityTerm(64, fullTimeWorkerFlag);
-					modeComponent.AddUtilityTerm(65, partTimeWorkerFlag);
+                    //GV: 3. june 2016 - added "no cars in HH" for full/part_time workers
+					modeComponent.AddUtilityTerm(64, fullTimeWorkerFlag + noCarsInHouseholdFlag);
+                    modeComponent.AddUtilityTerm(65, partTimeWorkerFlag + noCarsInHouseholdFlag);
 
-					modeComponent.AddUtilityTerm(66, noCarsInHouseholdFlag);
+					//modeComponent.AddUtilityTerm(66, noCarsInHouseholdFlag);
 					modeComponent.AddUtilityTerm(67, carsLessThanDriversFlag);
+
+                    //GV: university students; 3. june 2016 - not significant
+                    //modeComponent.AddUtilityTerm(68, universityStudentFlag);
+
+                    //GV: one person HH; 8. juni 2016
+                    modeComponent.AddUtilityTerm(69, onePersonHouseholdFlag); 
+
 				}
 				else if (mode == Global.Settings.Modes.Walk) {
-					modeComponent.AddUtilityTerm(70, 1.0);
-					//modeComponent.AddUtilityTerm(71, femaleFlag);
+					modeComponent.AddUtilityTerm(70, 1.0); 
+					//GV: Testing female variable again; 26. may 2016 - not sign.
+                    //modeComponent.AddUtilityTerm(71, femaleFlag);
 					modeComponent.AddUtilityTerm(72, nonworkingAdults);
-					modeComponent.AddUtilityTerm(73, retiredAdults);
+					//not sign.: modeComponent.AddUtilityTerm(73, retiredAdults);
 
-					modeComponent.AddUtilityTerm(76, noCarsInHouseholdFlag);
-					modeComponent.AddUtilityTerm(77, carsLessThanDriversFlag);
+                    //GV: one person HH
+                    modeComponent.AddUtilityTerm(74, onePersonHouseholdFlag);
+
+                    //GV: not significant
+					//modeComponent.AddUtilityTerm(76, noCarsInHouseholdFlag);
+					//modeComponent.AddUtilityTerm(77, carsLessThanDriversFlag);
 				}
 				else if (mode == Global.Settings.Modes.ParkAndRide) {
 					modeComponent.AddUtilityTerm(80, 1.0);
@@ -625,7 +651,7 @@ namespace Daysim.ChoiceModels.Actum.Models {
 					alternative.Choice = modeTimes; // JLB added 20130420
 
 					//alternative.AddNestedAlternative(HTourModeTime.TOTAL_TOUR_MODE_TIMES + periodComb + 1, periodComb, THETA_PARAMETER);
-					alternative.AddNestedAlternative(HTourModeTime.TotalTourModeTimes + mode, mode - 1, THETA_PARAMETER);
+					alternative.AddNestedAlternative(HTourModeTime.TotalTourModeTimes + mode, mode - 1, THETA_PARAMETER); 
 
 					//if (Global.Configuration.IsInEstimationMode && altIndex == choice.Index) {
 					//	Global.PrintFile.WriteLine("Aper Dper Mode {0} {1} {2} Travel Times {3} {4} Window {5} {6}",

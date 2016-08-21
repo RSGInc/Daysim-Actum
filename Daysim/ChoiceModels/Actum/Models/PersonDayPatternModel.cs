@@ -356,7 +356,7 @@ namespace Daysim.ChoiceModels.Actum.Models {
 			}
 
 			// tour utility
-			const int tourComponentIndex = 18;
+			const int tourComponentIndex = 18;  
 			choiceProbabilityCalculator.CreateUtilityComponent(tourComponentIndex);
 			var tourComponent = choiceProbabilityCalculator.GetUtilityComponent(tourComponentIndex);
 			//tourComponent.AddUtilityTerm(1701, carsPerDriver);

@@ -21,7 +21,7 @@ namespace Daysim.ChoiceModels.Actum.Models {
 		private const int TOTAL_ALTERNATIVES = 4;
 		private const int TOTAL_NESTED_ALTERNATIVES = 0;
 		private const int TOTAL_LEVELS = 1;
-		//private const int THETA_PARAMETER = 99;
+		//private const int THETA_PARAMETER = 99; 
 		private const int MAX_PARAMETER = 99;
 
 		public override void RunInitialize(ICoefficientsReader reader = null) {
@@ -56,7 +56,7 @@ namespace Daysim.ChoiceModels.Actum.Models {
 				else {
 					householdDay.JointTourFlag = 0;
 				}
-				
+
 				if (Global.Configuration.EstimationModel != CHOICE_MODEL_NAME) {
 					return;
 				}
@@ -77,7 +77,7 @@ namespace Daysim.ChoiceModels.Actum.Models {
 				//				}
 				//				else 	householdDay.PrimaryPriorityTimeFlag = 0;
 
-				int choice = householdDay.PrimaryPriorityTimeFlag + 2 * (householdDay.JointTours > 0 ? 1 : 0); 
+				int choice = householdDay.PrimaryPriorityTimeFlag + 2 * (householdDay.JointTours > 0 ? 1 : 0);
 
 				RunModel(choiceProbabilityCalculator, householdDay, choice);
 
@@ -121,7 +121,6 @@ namespace Daysim.ChoiceModels.Actum.Models {
 
 			}
 		}
-
 		private void RunModel(ChoiceProbabilityCalculator choiceProbabilityCalculator, HouseholdDayWrapper householdDay, int choice = Constants.DEFAULT_VALUE) {
 
 			var household = householdDay.Household;
@@ -159,8 +158,9 @@ namespace Daysim.ChoiceModels.Actum.Models {
 					var destinationDepartureTime = ChoiceModelUtility.GetDestinationDepartureTime(Global.Settings.Models.WorkTourModeModel);
 					//JLB 201406
 					//var nestedAlternative = Global.ChoiceModelSession.Get<WorkTourModeModel>().RunNested(personDay, residenceParcel, person.UsualWorkParcel, destinationArrivalTime, destinationDepartureTime, household.VehiclesAvailable);
-				//JLB 201602
-					//var nestedAlternative = Global.ChoiceModelSession.Get<WorkTourModeTimeModel>().RunNested(personDay, residenceParcel, person.UsualWorkParcel, destinationArrivalTime, destinationDepartureTime, household.VehiclesAvailable);
+
+					//JLB 201602
+					//var nestedAlternative = Global.ChoiceModelSession.Get<TourModeTimeModel>().RunNested(personDay, residenceParcel, person.UsualWorkParcel, destinationArrivalTime, destinationDepartureTime, household.VehiclesAvailable);
 					var nestedAlternative = Global.ChoiceModelSession.Get<TourModeTimeModel>().RunNested(personDay, residenceParcel, person.UsualWorkParcel, destinationArrivalTime, destinationDepartureTime, household.VehiclesAvailable, Global.Settings.Purposes.Work);
 					workLogsum = nestedAlternative == null ? 0 : nestedAlternative.ComputeLogsum();
 				}
@@ -253,13 +253,27 @@ namespace Daysim.ChoiceModels.Actum.Models {
 					pfptComponent.AddUtilityTerm(6, (householdDay.AdultsInSharedHomeStay == 2 && hasAdultEducLevel12 == 1).ToFlag());
 					pfptComponent.AddUtilityTerm(7, (householdDay.Household.VehiclesAvailable == 1 && household.Has2Drivers).ToFlag());
 					pfptComponent.AddUtilityTerm(8, (householdDay.Household.VehiclesAvailable >= 2 && household.Has2Drivers).ToFlag());
-					//pfptComponent.AddUtilityTerm(29, (householdDay.Household.Income >= 300000 && householdDay.Household.Income < 600000).ToFlag());
-					//pfptComponent.AddUtilityTerm(30, (householdDay.Household.Income >= 600000 && householdDay.Household.Income < 900000).ToFlag());
-					//pfptComponent.AddUtilityTerm(31, (householdDay.Household.Income >= 900000).ToFlag());
-					pfptComponent.AddUtilityTerm(9, (firstWorkLogsum + secondWorkLogsum) * (workingCoupleNoChildren || workingCoupleAllChildrenUnder5).ToFlag());
-					pfptComponent.AddUtilityTerm(9, (firstWorkLogsum + secondWorkLogsum) * otherHouseholdWithPTFTWorkers.ToFlag());
-					pfptComponent.AddUtilityTerm(10, compositeLogsum);
 
+					pfptComponent.AddUtilityTerm(11, (householdDay.Household.Income >= 300000 && householdDay.Household.Income < 600000).ToFlag());
+					pfptComponent.AddUtilityTerm(12, (householdDay.Household.Income >= 600000 && householdDay.Household.Income < 900000).ToFlag());
+					pfptComponent.AddUtilityTerm(13, (householdDay.Household.Income >= 900000).ToFlag());
+
+					// OBS; 27. aug., work tour mode logsum does not work - see what happens in the old PFPT model 
+					// GV, sep. 1st - it is not significant                    
+					pfptComponent.AddUtilityTerm(15, (firstWorkLogsum + secondWorkLogsum) *
+						 (workingCoupleNoChildren || workingCoupleAllChildrenUnder5).ToFlag());
+					pfptComponent.AddUtilityTerm(15, (firstWorkLogsum + secondWorkLogsum) * otherHouseholdWithPTFTWorkers.ToFlag());
+
+					// dette er gamle at-work logsum - it should be plus and significant
+					//alternative.AddUtilityTerm(31, (firstWorkLogsum + secondWorkLogsum) *
+					//(workingCoupleNoChildren || workingCoupleAllChildrenUnder5).ToFlag());
+					//alternative.AddUtilityTerm(31, (firstWorkLogsum + secondWorkLogsum) * otherHouseholdWithPTFTWorkers.ToFlag());
+
+					// at-home logsum works
+					pfptComponent.AddUtilityTerm(16, compositeLogsum);
+
+					//pfpt constant
+					pfptComponent.AddUtilityTerm(51, 1);
 
 				}
 			}
@@ -268,13 +282,44 @@ namespace Daysim.ChoiceModels.Actum.Models {
 					componentIndex = 2;
 					choiceProbabilityCalculator.CreateUtilityComponent(componentIndex);
 					var jointComponent = choiceProbabilityCalculator.GetUtilityComponent(componentIndex);
-					jointComponent.AddUtilityTerm(21, householdDay.Household.HasChildrenUnder5.ToFlag());
-					jointComponent.AddUtilityTerm(22, householdDay.Household.HasChildrenAge5Through15.ToFlag());
-					jointComponent.AddUtilityTerm(23, (youngestAge >= 40).ToFlag());
-					//noJointComponent.AddUtilityTerm(50, (householdDay.Household.Income >= 300000 && householdDay.Household.Income < 600000).ToFlag());
-					//noJointComponent.AddUtilityTerm(51, (householdDay.Household.Income >= 600000 && householdDay.Household.Income < 900000).ToFlag());
-					//noJointComponent.AddUtilityTerm(52, (householdDay.Household.Income >= 900000).ToFlag());
-					jointComponent.AddUtilityTerm(24, compositeLogsum);
+
+					jointComponent.AddUtilityTerm(21, (householdDay.Household.Size == 3).ToFlag());
+					jointComponent.AddUtilityTerm(22, (householdDay.Household.Size >= 4).ToFlag());
+
+					// GV: 1st sep.
+					//jointComponent.AddUtilityTerm(23, (householdDay.Household.Size == 2 && householdDay.Household.HasChildren).ToFlag());
+					//jointComponent.AddUtilityTerm(23, (householdDay.Household.Size >= 2 && householdDay.Household.HasChildren).ToFlag());
+					jointComponent.AddUtilityTerm(23, (householdDay.Household.HasChildren).ToFlag());
+
+					//jointComponent.AddUtilityTerm(21, householdDay.Household.HasChildrenUnder5.ToFlag());
+					//jointComponent.AddUtilityTerm(22, householdDay.Household.HasChildrenAge5Through15.ToFlag());
+
+					//jointComponent.AddUtilityTerm(23, householdDay.Household.HasChildren.ToFlag());
+
+					jointComponent.AddUtilityTerm(24, (householdDay.Household.Size == 2 && householdDay.AdultsInSharedHomeStay == 2).ToFlag());
+					//jointComponent.AddUtilityTerm(25, (householdDay.AdultsInSharedHomeStay == 2 && householdDay.Household.HouseholdTotals.FullAndPartTimeWorkers >= 2).ToFlag());
+					jointComponent.AddUtilityTerm(26, (householdDay.AdultsInSharedHomeStay == 2 && hasAdultEducLevel12 == 1).ToFlag());
+
+					//jointComponent.AddUtilityTerm(27, (householdDay.Household.Size == 2 && householdDay.Household.HasChildrenUnder5).ToFlag());
+					//jointComponent.AddUtilityTerm(28, (householdDay.Household.Size == 2 && householdDay.Household.HasChildrenAge5Through15).ToFlag());
+					//jointComponent.AddUtilityTerm(27, (householdDay.Household.Size == 2 && householdDay.Household.HasChildrenUnder16).ToFlag());
+
+					jointComponent.AddUtilityTerm(29, (householdDay.AdultsInSharedHomeStay == 1 && householdDay.Household.HasChildrenUnder16).ToFlag());
+
+					//jointComponent.AddUtilityTerm(37, (householdDay.Household.VehiclesAvailable == 1 && household.Has2Drivers).ToFlag());
+					//jointComponent.AddUtilityTerm(38, (householdDay.Household.VehiclesAvailable >= 2 && household.Has2Drivers).ToFlag());
+					jointComponent.AddUtilityTerm(30, (householdDay.Household.VehiclesAvailable >= 1 && household.Has2Drivers).ToFlag());
+
+					jointComponent.AddUtilityTerm(31, (householdDay.Household.Income >= 300000 && householdDay.Household.Income < 600000).ToFlag());
+					jointComponent.AddUtilityTerm(32, (householdDay.Household.Income >= 600000 && householdDay.Household.Income < 900000).ToFlag());
+					jointComponent.AddUtilityTerm(33, (householdDay.Household.Income >= 900000).ToFlag());
+
+					// GV, sep. 1st - it is not significant 
+					//jointComponent.AddUtilityTerm(41, compositeLogsum);
+
+					// joint non-mandatory tour constant
+					jointComponent.AddUtilityTerm(61, 1);
+                     
 				}
 			}
 
@@ -290,37 +335,32 @@ namespace Daysim.ChoiceModels.Actum.Models {
 						available = true;
 					}
 					var alternative = choiceProbabilityCalculator.GetAlternative(altIndex, available, choice != null && choice == altIndex);
-					
+
 					alternative.Choice = altIndex;
 
-					//NESTING WAS REJECTED BY TESTS
-					//alternative.AddNestedAlternative(5 + pfpt,          pfpt, THETA_PARAMETER);  // pfpt on top
+					//NESTING WAS REJECTED BY TESTS 
+					//GV: PFPT on top - cannot be estimated
+					//alternative.AddNestedAlternative(5 + pfpt,          pfpt, THETA_PARAMETER); 
 					//alternative.AddNestedAlternative(5 + jointTourFlag, jointTourFlag, THETA_PARAMETER); //jointTourFlag on top
 
 					if (pfpt == 1) {
-					alternative.AddUtilityComponent(choiceProbabilityCalculator.GetUtilityComponent(1));
-					//alternative.AddUtilityTerm(20, 1);
-					
+						alternative.AddUtilityComponent(choiceProbabilityCalculator.GetUtilityComponent(1));
+						//alternative.AddUtilityTerm(20, 1);
+
 					}
-					if (jointTourFlag == 0) {
-					alternative.AddUtilityComponent(choiceProbabilityCalculator.GetUtilityComponent(2));
-					//alternative.AddUtilityTerm(40, 1);
+					if (jointTourFlag == 1) {
+						alternative.AddUtilityComponent(choiceProbabilityCalculator.GetUtilityComponent(2));
+						//alternative.AddUtilityTerm(40, 1);
 					}
 
-					if (pfpt == 0 && jointTourFlag == 0) {
-					}
-					else if (pfpt == 1 && jointTourFlag == 0) {
-					alternative.AddUtilityTerm(51, 1);
-					}
-					else if (pfpt == 0 && jointTourFlag == 1) {
-					alternative.AddUtilityTerm(61, 1);
-					}
-					else if (pfpt == 1 && jointTourFlag == 1) {
-					alternative.AddUtilityTerm(71, 1);
-					//alternative.AddUtilityTerm(72, (householdDay.Household.Size == 2 && householdDay.AdultsInSharedHomeStay == 2).ToFlag());
-					//alternative.AddUtilityTerm(73, (householdDay.AdultsInSharedHomeStay == 1 && householdDay.Household.HasChildrenUnder16).ToFlag());
-					//alternative.AddUtilityTerm(74, (householdDay.AdultsInSharedHomeStay == 2 && householdDay.Household.HouseholdTotals.FullAndPartTimeWorkers >= 2).ToFlag());
-					//alternative.AddUtilityTerm(75, (householdDay.AdultsInSharedHomeStay == 2 && hasAdultEducLevel12 == 1).ToFlag());
+					if (pfpt == 1 && jointTourFlag == 1) {
+						alternative.AddUtilityTerm(71, 1);
+						//alternative.AddUtilityTerm(72, (householdDay.Household.Size == 2 && householdDay.AdultsInSharedHomeStay == 2).ToFlag());
+
+						// GV: comented out sep. 1st    
+						//GV: coeff. 73 is with a wrong sign - 13. june 2016
+                        //alternative.AddUtilityTerm(73, householdDay.Household.HasChildren.ToFlag());
+						//alternative.AddUtilityTerm(74, householdDay.Household.HasChildrenUnder16.ToFlag());
 					}
 
 				}

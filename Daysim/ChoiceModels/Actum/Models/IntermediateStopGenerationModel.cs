@@ -352,12 +352,17 @@ namespace Daysim.ChoiceModels.Actum.Models {
 			alternative.AddUtilityTerm(2, threeSimulatedTripsFlag);
 			alternative.AddUtilityTerm(2, fourSimulatedTripsFlag);
 			alternative.AddUtilityTerm(2, fivePlusSimulatedTripsFlag);
-			alternative.AddUtilityTerm(6, transitTourFlag);
-			alternative.AddUtilityTerm(7, bikeTourFlag);
+			
+            //GV: 21. june 2016, not sign.
+            //alternative.AddUtilityTerm(6, transitTourFlag);
+			
+            alternative.AddUtilityTerm(7, bikeTourFlag);
 			alternative.AddUtilityTerm(8, walkTourFlag);
 			alternative.AddUtilityTerm(9, jointHalfTour);
 			alternative.AddUtilityTerm(10, halfTourFromOriginFlag);
-			alternative.AddUtilityTerm(11, totalAggregateLogsum);
+
+            //GV: june 2016 - not sign
+            //alternative.AddUtilityTerm(11, totalAggregateLogsum);
 
 			alternative.AddUtilityTerm(12, businessTourFlag);
 			alternative.AddUtilityTerm(13, personalBusinessTourFlag);
@@ -366,7 +371,9 @@ namespace Daysim.ChoiceModels.Actum.Models {
 			alternative.AddUtilityTerm(16, escortTourFlag);
 			alternative.AddUtilityTerm(17, shoppingTourFlag);
 			alternative.AddUtilityTerm(18, timePressure);
-			//alternative.AddUtilityTerm(19, primaryFamilyTimeFlag);
+			
+            //GV: 21. june 2016, try to estimate again
+            alternative.AddUtilityTerm(19, primaryFamilyTimeFlag);
 
 			//alternative.AddUtilityTerm(15, from11PMto7AMFlag);
 
@@ -408,8 +415,12 @@ namespace Daysim.ChoiceModels.Actum.Models {
 
 			//alternative.AddUtilityTerm(32, isIndividualTour);
 			alternative.AddUtilityTerm(32, 1.0);
-			alternative.AddUtilityTerm(33, businessTourFlag);
-			//alternative.AddUtilityTerm(34, schoolTourFlag);
+
+            //GV: june 2016 - not sign
+            //alternative.AddUtilityTerm(33, businessTourFlag);
+			
+            
+            //alternative.AddUtilityTerm(34, schoolTourFlag);
 			//alternative.AddUtilityTerm(35, halfTourFromOriginFlag);
 			//alternative.AddUtilityTerm(36, simulatedBusinessStops);
 			//alternative.AddUtilityTerm(37, simulatedBusinessStopsFlag);
@@ -573,7 +584,9 @@ namespace Daysim.ChoiceModels.Actum.Models {
 			//alternative.AddUtilityTerm(141, retailBuffer2);
 			//alternative.AddUtilityTerm(142, numChildrenOnJointTour);
 			//alternative.AddUtilityTerm(143, (household.Has100KPlusIncome).ToFlag());
-			alternative.AddUtilityTerm(134, primaryFamilyTimeFlag);
+			
+            //GV: 21. june 2016, not sign.
+            //alternative.AddUtilityTerm(134, primaryFamilyTimeFlag);
 
 
 
@@ -595,7 +608,7 @@ namespace Daysim.ChoiceModels.Actum.Models {
 			alternative.Choice = Global.Settings.Purposes.Social;
 			//alternative.AddNestedAlternative(_nestedAlternativeIds[6], _nestedAlternativeIndexes[6], THETA_PARAMETER);
 
-			alternative.AddUtilityTerm(181, 1.0);
+			alternative.AddUtilityTerm(181, 1.0); 
 			//alternative.AddUtilityTerm(182, workTourFlag + schoolTourFlag + businessTourFlag);
 			//alternative.AddUtilityTerm(182, isJointTour);
 			//alternative.AddUtilityTerm(183, escortTourFlag);

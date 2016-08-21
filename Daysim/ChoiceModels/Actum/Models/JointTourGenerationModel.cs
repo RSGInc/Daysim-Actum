@@ -131,35 +131,33 @@ namespace Daysim.ChoiceModels.Actum.Models {
 
 			alternative.Choice = Global.Settings.Purposes.NoneOrHome;
 
-			alternative.AddUtilityTerm(1, (nCallsForTour == 2).ToFlag());
-			alternative.AddUtilityTerm(13, (nCallsForTour > 2).ToFlag());
-			//alternative.AddUtilityTerm(2, noCarsFlag);
-			//alternative.AddUtilityTerm(3, carCompetitionFlag);
-			//alternative.AddUtilityTerm(4, householdDay.PrimaryPriorityTimeFlag);
+            alternative.AddUtilityTerm(1, (nCallsForTour == 2).ToFlag());
+            alternative.AddUtilityTerm(13, (nCallsForTour > 2).ToFlag());
 
-			//alternative.AddUtilityTerm(2, householdDay.Household.HasChildren.ToFlag());
-			alternative.AddUtilityTerm(2, householdDay.Household.HasChildrenUnder5.ToFlag());
-			alternative.AddUtilityTerm(3, householdDay.Household.HasChildrenAge5Through15.ToFlag());
-			alternative.AddUtilityTerm(4, (householdDay.Household.Size == 2 && householdDay.AdultsInSharedHomeStay == 2).ToFlag());
-			alternative.AddUtilityTerm(5, (householdDay.AdultsInSharedHomeStay == 1 && householdDay.Household.HasChildrenUnder16).ToFlag());
-			alternative.AddUtilityTerm(6, (householdDay.AdultsInSharedHomeStay == 2 && householdDay.Household.HouseholdTotals.FullAndPartTimeWorkers >= 2).ToFlag());
-			alternative.AddUtilityTerm(7, (householdDay.AdultsInSharedHomeStay == 2 && hasAdultEducLevel12 == 1).ToFlag());
-			alternative.AddUtilityTerm(8, (youngestAge >= 40).ToFlag());
+            //alternative.AddUtilityTerm(2, noCarsFlag);
+            //alternative.AddUtilityTerm(3, carCompetitionFlag);
+            //alternative.AddUtilityTerm(4, householdDay.PrimaryPriorityTimeFlag);
 
-			alternative.AddUtilityTerm(10, (householdDay.Household.Income >= 300000 && householdDay.Household.Income < 600000).ToFlag());
-			alternative.AddUtilityTerm(11, (householdDay.Household.Income >= 600000 && householdDay.Household.Income < 900000).ToFlag());
-			alternative.AddUtilityTerm(12, (householdDay.Household.Income >= 900000).ToFlag());
 
-			//alternative.AddUtilityTerm(13, hasAdultEducLevel12);
-			//alternative.AddUtilityTerm(14, allAdultEducLevel12);
-			//alternative.AddUtilityTerm(15, (youngestAge >= 40).ToFlag());
-			//alternative.AddUtilityTerm(10, (householdDay.AdultsInSharedHomeStay == 2 && householdDay.Household.HouseholdTotals.FullAndPartTimeWorkers >= 2).ToFlag());//
+            //alternative.AddUtilityTerm(2, householdDay.Household.HasChildren.ToFlag());
 
-			//alternative.AddUtilityTerm(11, (householdDay.AdultsInSharedHomeStay == 2 && hasAdultEducLevel12 == 1).ToFlag());
-			//alternative.AddUtilityTerm(11, (householdDay.AdultsInSharedHomeStay == 2 && allAdultEducLevel12 == 1).ToFlag());
+            //GV Sep 2014 - commented out
+            //alternative.AddUtilityTerm(2, householdDay.Household.HasChildrenUnder5.ToFlag());
+            //alternative.AddUtilityTerm(3, householdDay.Household.HasChildrenAge5Through15.ToFlag());
+            //alternative.AddUtilityTerm(4, (householdDay.Household.Size == 2 && householdDay.AdultsInSharedHomeStay == 2).ToFlag());
+            //alternative.AddUtilityTerm(5, (householdDay.AdultsInSharedHomeStay == 1 && householdDay.Household.HasChildrenUnder16).ToFlag());
+            //alternative.AddUtilityTerm(6, (householdDay.AdultsInSharedHomeStay == 2 && householdDay.Household.HouseholdTotals.FullAndPartTimeWorkers >= 2).ToFlag());
+            //alternative.AddUtilityTerm(7, (householdDay.AdultsInSharedHomeStay == 2 && hasAdultEducLevel12 == 1).ToFlag());
+            //alternative.AddUtilityTerm(8, (youngestAge >= 40).ToFlag());
+            //alternative.AddUtilityTerm(10, (householdDay.Household.Income >= 300000 && householdDay.Household.Income < 600000).ToFlag());
+            //alternative.AddUtilityTerm(11, (householdDay.Household.Income >= 600000 && householdDay.Household.Income < 900000).ToFlag());
+            //alternative.AddUtilityTerm(12, (householdDay.Household.Income >= 900000).ToFlag());
 
-			//alternative.AddNestedAlternative(11, 0, 60);
 
+            //GV old
+            //alternative.AddNestedAlternative(11, 0, 60);
+            
+            
 			// WORK
 			alternative = choiceProbabilityCalculator.GetAlternative(Global.Settings.Purposes.Work, false, choice == Global.Settings.Purposes.Work);
 			alternative.Choice = Global.Settings.Purposes.Work;
@@ -189,52 +187,74 @@ namespace Daysim.ChoiceModels.Actum.Models {
 			alternative.Choice = Global.Settings.Purposes.PersonalBusiness;
 
 			alternative.AddUtilityTerm(21, 1);
-			alternative.AddUtilityTerm(22, householdDay.PrimaryPriorityTimeFlag);
 
-			alternative.AddUtilityTerm(23, (householdDay.Household.Size == 3).ToFlag());
-			alternative.AddUtilityTerm(24, (householdDay.Household.Size >= 4).ToFlag());
-			//alternative.AddUtilityTerm(25, (householdDay.Household.Size >= 5).ToFlag());
+            //GV: NEW
+            alternative.AddUtilityTerm(22, householdDay.PrimaryPriorityTimeFlag);
+            alternative.AddUtilityTerm(23, (householdDay.Household.Size == 3).ToFlag());
+            alternative.AddUtilityTerm(24, (householdDay.Household.Size >= 4).ToFlag());
+            alternative.AddUtilityTerm(28, (householdDay.Household.VehiclesAvailable >= 2 && household.Has2Drivers).ToFlag());
+            alternative.AddUtilityTerm(56, compositeLogsum);
 
-			//alternative.AddUtilityTerm(26, (householdDay.Household.VehiclesAvailable == 0).ToFlag());
-			//alternative.AddUtilityTerm(27, (householdDay.Household.VehiclesAvailable == 1 && household.Has2Drivers).ToFlag());
-			alternative.AddUtilityTerm(28, (householdDay.Household.VehiclesAvailable >= 2 && household.Has2Drivers).ToFlag());
 
-			//alternative.AddUtilityTerm(27, (householdDay.Household.Size == 2 && householdDay.AdultsInSharedHomeStay == 2).ToFlag());
-			//alternative.AddUtilityTerm(28, (householdDay.AdultsInSharedHomeStay == 1 && householdDay.Household.HasChildrenUnder16).ToFlag());
 
-			//alternative.AddUtilityTerm(56, personalBusinessAggregateLogsum);
-			alternative.AddUtilityTerm(56, compositeLogsum);
+            //alternative.AddUtilityTerm(25, (householdDay.Household.Size >= 5).ToFlag());
 
-			//alternative.AddNestedAlternative(12, 1, 60);
+            //alternative.AddUtilityTerm(26, (householdDay.Household.VehiclesAvailable == 0).ToFlag());
+            //alternative.AddUtilityTerm(27, (householdDay.Household.VehiclesAvailable == 1 && household.Has2Drivers).ToFlag());
+            //alternative.AddUtilityTerm(28, (householdDay.Household.VehiclesAvailable >= 2 && household.Has2Drivers).ToFlag());
 
+            //alternative.AddUtilityTerm(27, (householdDay.Household.Size == 2 && householdDay.AdultsInSharedHomeStay == 2).ToFlag());
+            //alternative.AddUtilityTerm(28, (householdDay.AdultsInSharedHomeStay == 1 && householdDay.Household.HasChildrenUnder16).ToFlag());
+
+            //alternative.AddUtilityTerm(56, personalBusinessAggregateLogsum);
+
+            //alternative.AddUtilityTerm(56, compositeLogsum);
+
+
+            //alternative.AddNestedAlternative(12, 1, 60);
+           
 			// SHOPPING
 			alternative = choiceProbabilityCalculator.GetAlternative(Global.Settings.Purposes.Shopping, true, choice == Global.Settings.Purposes.Shopping);
 			alternative.Choice = Global.Settings.Purposes.Shopping;
 
 			alternative.AddUtilityTerm(31, 1);
-			alternative.AddUtilityTerm(32, householdDay.PrimaryPriorityTimeFlag);
 
-			alternative.AddUtilityTerm(33, (householdDay.Household.Size == 3).ToFlag());
-			alternative.AddUtilityTerm(34, (householdDay.Household.Size >= 4).ToFlag());
-			//alternative.AddUtilityTerm(35, (householdDay.Household.Size >= 5).ToFlag());
+            //GV: NEW
+            alternative.AddUtilityTerm(32, householdDay.PrimaryPriorityTimeFlag);
+            alternative.AddUtilityTerm(33, (householdDay.Household.Size == 3).ToFlag());
+            alternative.AddUtilityTerm(34, (householdDay.Household.Size >= 4).ToFlag());
+            alternative.AddUtilityTerm(37, (householdDay.Household.VehiclesAvailable == 1 && household.Has2Drivers).ToFlag());
+            alternative.AddUtilityTerm(59, compositeLogsum);
 
-			//alternative.AddUtilityTerm(36, (householdDay.Household.VehiclesAvailable == 0).ToFlag());
-			alternative.AddUtilityTerm(37, (householdDay.Household.VehiclesAvailable == 1 && household.Has2Drivers).ToFlag());
-			alternative.AddUtilityTerm(38, (householdDay.Household.VehiclesAvailable >= 2 && household.Has2Drivers).ToFlag());
 
-			//alternative.AddUtilityTerm(37, (householdDay.Household.Size == 2 && householdDay.AdultsInSharedHomeStay == 2).ToFlag());
-			//alternative.AddUtilityTerm(38, (householdDay.AdultsInSharedHomeStay == 1 && householdDay.Household.HasChildrenUnder16).ToFlag());
 
-			//alternative.AddUtilityTerm(57, shoppingAggregateLogsum);
-			alternative.AddUtilityTerm(59, compositeLogsum);
 
-			//alternative.AddNestedAlternative(12, 1, 60);
+            //alternative.AddUtilityTerm(35, (householdDay.Household.Size >= 5).ToFlag());
+
+
+            //alternative.AddUtilityTerm(36, (householdDay.Household.VehiclesAvailable == 0).ToFlag());
+            //alternative.AddUtilityTerm(37, (householdDay.Household.VehiclesAvailable == 1 && household.Has2Drivers).ToFlag());
+
+            //GV Sep 2014 commeted out
+            //alternative.AddUtilityTerm(38, (householdDay.Household.VehiclesAvailable >= 2 && household.Has2Drivers).ToFlag());
+
+
+            //GV old
+            //alternative.AddUtilityTerm(37, (householdDay.Household.Size == 2 && householdDay.AdultsInSharedHomeStay == 2).ToFlag());
+            //alternative.AddUtilityTerm(38, (householdDay.AdultsInSharedHomeStay == 1 && householdDay.Household.HasChildrenUnder16).ToFlag());
+
+
+            //alternative.AddUtilityTerm(57, shoppingAggregateLogsum);
+
+            //alternative.AddUtilityTerm(59, compositeLogsum);
+
+            //alternative.AddNestedAlternative(12, 1, 60);
 
 			// MEAL
 			alternative = choiceProbabilityCalculator.GetAlternative(Global.Settings.Purposes.Meal, false, choice == Global.Settings.Purposes.Meal);
 			alternative.Choice = Global.Settings.Purposes.Meal;
 
-			alternative.AddUtilityTerm(55, 1);
+			alternative.AddUtilityTerm(55, 1); 
 
 			//alternative.AddNestedAlternative(12, 1, 60);
 
@@ -242,30 +262,40 @@ namespace Daysim.ChoiceModels.Actum.Models {
 			alternative = choiceProbabilityCalculator.GetAlternative(Global.Settings.Purposes.Social, true, choice == Global.Settings.Purposes.Social);
 			alternative.Choice = Global.Settings.Purposes.Social;
 
-			alternative.AddUtilityTerm(41, 1);
-			alternative.AddUtilityTerm(42, householdDay.PrimaryPriorityTimeFlag);
+			//GV: John's mail 16. june 2016, coeff 41 constrained to 0
+            alternative.AddUtilityTerm(41, 1);
 
-			alternative.AddUtilityTerm(43, (householdDay.Household.Size == 3).ToFlag());
-			alternative.AddUtilityTerm(44, (householdDay.Household.Size >= 4).ToFlag());
-			//alternative.AddUtilityTerm(45, (householdDay.Household.Size >= 5).ToFlag());
+            //GV: NEW
+            //alternative.AddUtilityTerm(42, householdDay.PrimaryPriorityTimeFlag);
+            alternative.AddUtilityTerm(43, (householdDay.Household.Size == 3).ToFlag());
+            alternative.AddUtilityTerm(44, (householdDay.Household.Size >= 4).ToFlag());
 
-			//alternative.AddUtilityTerm(46, (householdDay.Household.VehiclesAvailable >= 1).ToFlag());
-			//alternative.AddUtilityTerm(47, (householdDay.Household.VehiclesAvailable == 1 && household.Has2Drivers).ToFlag());
-			alternative.AddUtilityTerm(48, (householdDay.Household.VehiclesAvailable >= 2 && household.Has2Drivers).ToFlag());
 
-			//alternative.AddUtilityTerm(46, (householdDay.Household.VehiclesAvailable > 0 && householdDay.Household.HasChildren).ToFlag());
-			//alternative.AddUtilityTerm(46, (householdDay.Household.VehiclesAvailable == 0).ToFlag()); cars have no impact on fully joint social tour
 
-			//alternative.AddUtilityTerm(47, householdDay.Household.HasChildrenUnder5.ToFlag());
-			//alternative.AddUtilityTerm(48, householdDay.Household.HasChildrenAge5Through15.ToFlag());
+            //alternative.AddUtilityTerm(45, (householdDay.Household.Size >= 5).ToFlag());
 
-			//alternative.AddUtilityTerm(47, (householdDay.Household.Size == 2 && householdDay.AdultsInSharedHomeStay == 2).ToFlag());
-			//alternative.AddUtilityTerm(48, (householdDay.AdultsInSharedHomeStay == 1 && householdDay.Household.HasChildrenUnder16).ToFlag());
+            //alternative.AddUtilityTerm(46, (householdDay.Household.VehiclesAvailable >= 1).ToFlag());
+            //alternative.AddUtilityTerm(47, (householdDay.Household.VehiclesAvailable == 1 && household.Has2Drivers).ToFlag());
 
-			//alternative.AddUtilityTerm(58, socialAggregateLogsum);
-			//alternative.AddUtilityTerm(58, compositeLogsum);
 
-			//alternative.AddNestedAlternative(12, 1, 60);
+            //GV Sep 2014 commeted out
+            //alternative.AddUtilityTerm(48, (householdDay.Household.VehiclesAvailable >= 2 && household.Has2Drivers).ToFlag());
+
+            //alternative.AddUtilityTerm(46, (householdDay.Household.VehiclesAvailable > 0 && householdDay.Household.HasChildren).ToFlag());
+            //alternative.AddUtilityTerm(46, (householdDay.Household.VehiclesAvailable == 0).ToFlag()); cars have no impact on fully joint social tour
+
+            //alternative.AddUtilityTerm(47, householdDay.Household.HasChildrenUnder5.ToFlag());
+            //alternative.AddUtilityTerm(48, householdDay.Household.HasChildrenAge5Through15.ToFlag());
+
+            //alternative.AddUtilityTerm(47, (householdDay.Household.Size == 2 && householdDay.AdultsInSharedHomeStay == 2).ToFlag());
+            //alternative.AddUtilityTerm(48, (householdDay.AdultsInSharedHomeStay == 1 && householdDay.Household.HasChildrenUnder16).ToFlag());
+
+            //alternative.AddUtilityTerm(58, socialAggregateLogsum);
+            //alternative.AddUtilityTerm(58, compositeLogsum);
+
+            //alternative.AddNestedAlternative(12, 1, 60); 
+
+          
 
 		}
 	}
