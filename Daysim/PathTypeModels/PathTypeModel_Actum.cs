@@ -378,9 +378,12 @@ namespace Daysim.PathTypeModels {
 				useZones
 					? ImpedanceRoster.GetValue("time", skimMode, pathType, votValue, _outboundTime, _originZoneId, _destinationZoneId)
 					: ImpedanceRoster.GetValue("time", skimMode, pathType, votValue, _outboundTime, _originParcel, _destinationParcel, circuityDistance);
-
 			_pathTime[pathType] = skimValue.Variable;
-			_pathDistance[pathType] = skimValue.BlendVariable;
+			skimValue =
+				useZones
+					? ImpedanceRoster.GetValue("distance", skimMode, pathType, votValue, _outboundTime, _originZoneId, _destinationZoneId)
+					: ImpedanceRoster.GetValue("distance", skimMode, pathType, votValue, _outboundTime, _originParcel, _destinationParcel, circuityDistance);
+			_pathDistance[pathType] = skimValue.Variable;
 			_pathCost[pathType] = 0;
 			_pathParkAndRideNodeId[pathType] = 0;
 
@@ -390,9 +393,12 @@ namespace Daysim.PathTypeModels {
 					useZones
 						? ImpedanceRoster.GetValue("time", skimMode, pathType, votValue, _returnTime, _destinationZoneId, _originZoneId)
 						: ImpedanceRoster.GetValue("time", skimMode, pathType, votValue, _returnTime, _destinationParcel, _originParcel, circuityDistance);
-
 				_pathTime[pathType] += skimValue.Variable;
-				_pathDistance[pathType] += skimValue.BlendVariable;
+				skimValue =
+					useZones
+						? ImpedanceRoster.GetValue("distance", skimMode, pathType, votValue, _returnTime, _destinationZoneId, _originZoneId)
+						: ImpedanceRoster.GetValue("distance", skimMode, pathType, votValue, _returnTime, _destinationParcel, _originParcel, circuityDistance);
+				_pathDistance[pathType] += skimValue.Variable;
 			}
 
 			// sacog-specific adjustment of generalized time for bike mode

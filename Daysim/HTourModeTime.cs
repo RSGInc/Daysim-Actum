@@ -292,6 +292,8 @@ namespace Daysim {
 						modeTimes.DestinationAccessTime = pathTypeModel.PathDestinationAccessTime;
 						modeTimes.DestinationAccessDistance = pathTypeModel.PathDestinationAccessDistance;
 						modeTimes.DestinationAccessCost = pathTypeModel.PathDestinationAccessCost;
+						modeTimes.PathDistance = pathTypeModel.PathDistance;
+						modeTimes.PathCost = pathTypeModel.PathCost;
 
 					}
 				}
