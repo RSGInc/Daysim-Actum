@@ -375,6 +375,8 @@ namespace Daysim.ChoiceModels.Actum.Models {
             //GV: 21. june 2016, try to estimate again
             alternative.AddUtilityTerm(19, primaryFamilyTimeFlag);
 
+            alternative.AddUtilityTerm(20, person.IsChildUnder5.ToFlag() );
+
 			//alternative.AddUtilityTerm(15, from11PMto7AMFlag);
 
 			//alternative.AddUtilityTerm(1, twoSimulatedTripsFlag * halfTourFromOriginFlag * isIndividualTour);

@@ -1390,6 +1390,10 @@ namespace Daysim.Framework.Core {
 		[XmlAttribute]
 		public int MinimumParcelToStopAreaLengthUnitsToBike { get; set; }
 
+		[XmlAttribute]
+		public double Policy_IncomeMultiplier { get; set; }
+
+
 
 	}
 }

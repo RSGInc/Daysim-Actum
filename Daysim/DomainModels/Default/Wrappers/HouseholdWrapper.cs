@@ -153,7 +153,7 @@ namespace Daysim.DomainModels.Default.Wrappers {
 		}
 
 		public int Income {
-			get { return _household.Income; }
+			get { return  (int) Math.Round(_household.Income * Global.Policy_IncomeMultiplier); }
 			set { _household.Income = value; }
 		}
 

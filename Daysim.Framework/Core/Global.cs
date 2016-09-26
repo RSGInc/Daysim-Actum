@@ -280,6 +280,14 @@ namespace Daysim.Framework.Core {
 			}
 		}
 
+		public static double Policy_IncomeMultiplier {
+			get {
+				return Math.Abs(Configuration.Policy_IncomeMultiplier) > Constants.EPSILON
+					? Configuration.Policy_IncomeMultiplier
+					: 1.0;
+			}
+		}
+
 		public static char SkimDelimiter {
 			get { return Configuration.SkimDelimiter == 0 ? ' ' : Configuration.SkimDelimiter; }
 		}
