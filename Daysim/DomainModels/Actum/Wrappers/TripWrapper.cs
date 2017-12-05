@@ -21,7 +21,7 @@ namespace Daysim.DomainModels.Actum.Wrappers {
 
 		[UsedImplicitly]
 		public TripWrapper(IActumTrip trip, ITourWrapper tourWrapper, IHalfTour halfTour)
-		//public TripWrapper(IActumTrip trip, IActumTourWrapper tourWrapper, IHalfTour halfTour)
+			//public TripWrapper(IActumTrip trip, IActumTourWrapper tourWrapper, IHalfTour halfTour)
 			: base(trip, tourWrapper, halfTour) {
 			_trip = (IActumTrip) trip;
 		}
@@ -123,7 +123,7 @@ namespace Daysim.DomainModels.Actum.Wrappers {
 
 		#region wrapper methods
 
-		public override void SetDriverOrPassenger(List<ITripWrapper> trips) {
+		public virtual void SetDriverOrPassenger(List<ITripWrapper> trips) {
 			if (Mode == Global.Settings.Modes.Walk || Mode == Global.Settings.Modes.Bike || Mode == Global.Settings.Modes.Transit || Mode == Global.Settings.Modes.SchoolBus || Mode == Global.Settings.Modes.Other) {
 				DriverType = Global.Settings.DriverTypes.NotApplicable;
 			}
@@ -133,9 +133,15 @@ namespace Daysim.DomainModels.Actum.Wrappers {
 			else if (Mode == Global.Settings.Modes.HovPassenger) {
 				DriverType = Global.Settings.DriverTypes.Passenger;
 			}
+			if (Mode >= Global.Settings.Modes.Sov && Mode <= Global.Settings.Modes.Hov3 && Global.Configuration.AV_IncludeAutoTypeChoice && Tour.Household.OwnsAutomatedVehicles > 0) {
+				DriverType = DriverType + 2; //two types of AV passengers so we know which trips to assign to network
+			}
+			if ((Mode == Global.Settings.Modes.PaidRideShare) && (Global.Configuration.AV_PaidRideShareModeUsesAVs))  {
+				DriverType = DriverType + 2; //two types of AV passengers so we know which trips to assign to network
+			}
 		}
 
-		public override void SetTripValueOfTime() {
+		public virtual void SetTripValueOfTime() {
 			var costDivisor =
 				Mode == Global.Settings.Modes.HovDriver && (Tour.DestinationPurpose == Global.Settings.Purposes.Work || Tour.DestinationPurpose == Global.Settings.Purposes.Business)
 					? Global.Configuration.Coefficients_HOV2CostDivisor_Work
@@ -186,8 +192,8 @@ namespace Daysim.DomainModels.Actum.Wrappers {
 
 					time.EarliestFeasibleDepatureTime = Math.Max(period.Start,
 							this.IsHalfTourFromOrigin
-						//JLB 20130723 replace next line
-						//? trip.ArrivalTimeLimit + - (int) (time.ModeLOS.PathTime + 0.5)
+							//JLB 20130723 replace next line
+							//? trip.ArrivalTimeLimit + - (int) (time.ModeLOS.PathTime + 0.5)
 							? this.ArrivalTimeLimit + (int) (travelTime + 0.5)
 							: this.EarliestDepartureTime);
 
@@ -313,10 +319,10 @@ namespace Daysim.DomainModels.Actum.Wrappers {
 				}
 				else //check if another trip needs to be scheduled and there only a few minutes left
 					if ((IsHalfTourFromOrigin && ArrivalTime < Tour.EarliestOriginDepartureTime + 3 && DestinationParcel != Tour.OriginParcel) || (!IsHalfTourFromOrigin && ArrivalTime > Tour.LatestOriginArrivalTime - 3 && DestinationParcel != Tour.OriginParcel)) {
-						if (!Global.Configuration.IsInEstimationMode) {
-							PersonDay.IsValid = false;
-						}
+					if (!Global.Configuration.IsInEstimationMode) {
+						PersonDay.IsValid = false;
 					}
+				}
 
 				if (Global.Configuration.TraceModelResultValidity) {
 					if (PersonDay.HouseholdDay.AttemptedSimulations >= Global.Configuration.InvalidAttemptsBeforeTrace) {

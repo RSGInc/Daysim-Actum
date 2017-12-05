@@ -10,29 +10,33 @@ namespace Daysim.Framework.Settings {
 		int TotalModes { get; }
 
 		int MaxMode { get; }
-		
+
 		int None { get; }
-		
+
 		int Walk { get; }
-		
+
 		int Bike { get; }
-		
+
 		int Sov { get; }
-		
+
 		int Hov2 { get; }
-		
+
 		int Hov3 { get; }
-		
+
 		int Transit { get; }
-		
+
 		int ParkAndRide { get; }
-		
+
 		int SchoolBus { get; }
-		
+
+		int PaidRideShare { get; }
+
+		int AV { get; }
+
 		int Other { get; }
-		
+
 		int HovDriver { get; }
-		
+
 		int HovPassenger { get; }
 
 		int KissAndRide { get; }
@@ -46,11 +50,9 @@ namespace Daysim.Framework.Settings {
 		int WalkRideBike { get; }
 
 		int BikeParkRideWalk { get; }
-	
+
 		int BikeParkRideBike { get; }
-	
+
 		int BikeOnTransit { get; }
-	
-	
 	}
 }

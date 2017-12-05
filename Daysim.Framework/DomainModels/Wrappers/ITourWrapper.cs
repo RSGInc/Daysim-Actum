@@ -230,7 +230,7 @@ namespace Daysim.Framework.DomainModels.Wrappers {
 
 		bool IsHovPassengerMode();
 
-
+		bool IsPaidRideShareMode();
 
 		#endregion
 

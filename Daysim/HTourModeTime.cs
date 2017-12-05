@@ -259,6 +259,7 @@ namespace Daysim {
 							tour.Person.IsDrivingAge,
 							householdCars,
 							tour.Person.TransitPassOwnership,
+							tour.Household.OwnsAutomatedVehicles>0,
 							transitDiscountFraction,
 							false,
 							mode);
@@ -318,6 +319,7 @@ namespace Daysim {
 							tour.Person.IsDrivingAge,
 							householdCars,
 							tour.Person.TransitPassOwnership,
+							tour.Household.OwnsAutomatedVehicles>0,
 							transitDiscountFraction,
 							false,
 							pathMode);
@@ -344,6 +346,7 @@ namespace Daysim {
 							tour.Person.IsDrivingAge,
 							householdCars,
 							tour.Person.TransitPassOwnership,
+							tour.Household.OwnsAutomatedVehicles>0,
 							transitDiscountFraction,
 							false,
 							pathMode);

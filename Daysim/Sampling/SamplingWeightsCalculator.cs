@@ -146,7 +146,7 @@ namespace Daysim.Sampling {
 								 Math.Exp(sizeFactors[10]) * parcel.Households +
 								 Math.Exp(sizeFactors[11]) * parcel.StudentsK8 +
 								 Math.Exp(sizeFactors[12]) * parcel.StudentsUniversity +
-								 Math.Exp(sizeFactors[13]) * parcel.GetLandUseCode19() +
+								 Math.Exp(sizeFactors[13]) * parcel.GetLandUseCode19() + 
 								 Math.Exp(sizeFactors[14]) * parcel.OpenSpaceType1Buffer1 +
 								 Math.Exp(sizeFactors[15]) * parcel.OpenSpaceType2Buffer1 +
 								 Math.Exp(sizeFactors[16]) * parcel.StudentsHighSchool;

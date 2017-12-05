@@ -51,11 +51,11 @@ namespace Daysim.Settings {
 		//}
 
 		public override int TotalModes {
-			get { return 13; }
+			get { return 15; }
 		}
 
 		public override int MaxMode {
-			get {	return 13; }
+			get {	return 14; }
 		}
 		
 		public override int Walk {
@@ -110,6 +110,17 @@ namespace Daysim.Settings {
 			get { return 13; }
 		}
 
-	
-	}
+        public override int PaidRideShare
+        { //for use with mode choice models
+            get { return 14; }
+        }
+
+        public override int AV
+        { //for use with PathTypeModel if separae skims
+            get { return 14; }
+        }
+
+
+
+    }
 }

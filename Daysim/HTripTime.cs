@@ -137,6 +137,7 @@ namespace Daysim {
 									tour.Person.IsDrivingAge,
 									tour.Household.VehiclesAvailable,
 									tour.Person.TransitPassOwnership,
+									tour.Household.OwnsAutomatedVehicles>0,
 									tour.Person.GetTransitFareDiscountFraction(),
 									true,
 									pathMode);

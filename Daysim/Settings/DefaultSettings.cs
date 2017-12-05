@@ -317,6 +317,14 @@ namespace Daysim.Settings {
 			get { return 8; }
 		}
 
+		public virtual int PaidRideShare { //for use with mode choice models
+			get { return 9; }
+		}
+
+		public virtual int AV { //for use with PathTypeModel if separae skims
+			get { return 9; }
+		}
+
 		public virtual int Other {
 			get { return 9; }
 		}

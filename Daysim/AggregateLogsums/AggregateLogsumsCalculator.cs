@@ -477,14 +477,14 @@ namespace Daysim.AggregateLogsums {
                     IEnumerable<dynamic> pathTypeModels;
 										                                        
 										pathTypeModels = PathTypeModelFactory.Model.Run(randomUtility, id, destination.Id, _middayStartMinute, _middayStartMinute, Global.Settings.Purposes.PersonalBusiness,
-                                            costCoefficient, timeCoefficient, true, 1, 0, 0.0, false, Global.Settings.Modes.Walk);
+                                            costCoefficient, timeCoefficient, true, 1, 0, false, 0.0, false, Global.Settings.Modes.Walk);
                     var walkPath = pathTypeModels.First();
 
 										walkGenTime = walkPath.GeneralizedTimeLogsum;
 
                                         
 										pathTypeModels = PathTypeModelFactory.Model.Run(randomUtility, id, destination.Id, _middayStartMinute, _middayStartMinute, Global.Settings.Purposes.PersonalBusiness,
-                                            costCoefficient, timeCoefficient, true, 1, 0, 0.0, false, Global.Settings.Modes.Sov);
+                                            costCoefficient, timeCoefficient, true, 1, 0, false, 0.0, false, Global.Settings.Modes.Sov);
                     var sovPath = pathTypeModels.First();
 
 										var sovDistanceFromOrigin = (sovPath.PathDistance/ Global.Settings.DistanceUnitsPerMile) / 2D;
@@ -493,7 +493,7 @@ namespace Daysim.AggregateLogsums {
 										sovGenTime = sovPath.GeneralizedTimeLogsum;
 
                     pathTypeModels = PathTypeModelFactory.Model.Run(randomUtility, id, destination.Id, _middayStartMinute, _middayStartMinute, Global.Settings.Purposes.PersonalBusiness,
-                                            costCoefficient, timeCoefficient, true, 1, 0, 0.0, false, Global.Settings.Modes.Hov2);
+                                            costCoefficient, timeCoefficient, true, 1, 0, false, 0.0, false, Global.Settings.Modes.Hov2);
                     var hov2Path = pathTypeModels.First();
 
 										hov2GenTime = hov2Path.GeneralizedTimeLogsum;
@@ -507,7 +507,7 @@ namespace Daysim.AggregateLogsums {
 											: id;
 										
 										pathTypeModels = PathTypeModelFactory.Model.Run(randomUtility, transitOid, transitDid, _middayStartMinute, _middayStartMinute, Global.Settings.Purposes.PersonalBusiness,
-                                            costCoefficient, timeCoefficient, true, 1, 0, Global.Configuration.Policy_UniversalTransitFareDiscountFraction, false, Global.Settings.Modes.Transit);
+                                            costCoefficient, timeCoefficient, true, 1, 0, false, Global.Configuration.Policy_UniversalTransitFareDiscountFraction, false, Global.Settings.Modes.Transit);
                     var transitPath = pathTypeModels.First();
 
 										transitGenTime = transitPath.GeneralizedTimeLogsum;
