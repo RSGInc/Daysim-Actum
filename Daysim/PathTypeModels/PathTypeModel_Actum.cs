@@ -41,6 +41,7 @@ namespace Daysim.PathTypeModels {
 		private double _tourTimeCoefficient;
 		private bool _isDrivingAge;
 		private int _householdCars;
+		private bool _carsAreAVs;
 		private int _transitPassOwnership;
 		private double _transitDiscountFraction;
 		private bool _randomChoice;
@@ -110,7 +111,7 @@ namespace Daysim.PathTypeModels {
 
 		public virtual bool Available { get; protected set; }
 
-		public virtual List<IPathTypeModel> RunAllPlusParkAndRide(IRandomUtility randomUtility, IParcelWrapper originParcel, IParcelWrapper destinationParcel, int outboundTime, int returnTime, int purpose, double tourCostCoefficient, double tourTimeCoefficient, bool isDrivingAge, int householdCars, int transitPassOwnership, double transitDiscountFraction, bool randomChoice) {
+		public virtual List<IPathTypeModel> RunAllPlusParkAndRide(IRandomUtility randomUtility, IParcelWrapper originParcel, IParcelWrapper destinationParcel, int outboundTime, int returnTime, int purpose, double tourCostCoefficient, double tourTimeCoefficient, bool isDrivingAge, int householdCars, int transitPassOwnership, bool carsAreAVs, double transitDiscountFraction, bool randomChoice) {
 			//		public virtual List<PathTypeModel_Actum> RunAllPlusParkAndRide(IRandomUtility randomUtility, IActumParcelWrapper originParcel, IActumParcelWrapper destinationParcel, int outboundTime, int returnTime, int purpose, double tourCostCoefficient, double tourTimeCoefficient, bool isDrivingAge, int householdCars, double transitDiscountFraction, bool randomChoice) {
 			var modes = new List<int>();
 
@@ -118,27 +119,35 @@ namespace Daysim.PathTypeModels {
 				modes.Add(mode);
 			}
 
-			return Run(randomUtility, originParcel, destinationParcel, outboundTime, returnTime, purpose, tourCostCoefficient, tourTimeCoefficient, isDrivingAge, householdCars, transitPassOwnership, transitDiscountFraction, randomChoice, modes.ToArray());
+			return Run(randomUtility, originParcel, destinationParcel, outboundTime, returnTime, purpose, tourCostCoefficient, tourTimeCoefficient, isDrivingAge, householdCars, transitPassOwnership, carsAreAVs, transitDiscountFraction, randomChoice, modes.ToArray());
 		}
 
-		public virtual List<IPathTypeModel> RunAll(IRandomUtility randomUtility, IParcelWrapper originParcel, IParcelWrapper destinationParcel, int outboundTime, int returnTime, int purpose, double tourCostCoefficient, double tourTimeCoefficient, bool isDrivingAge, int householdCars, int transitPassOwnership, double transitDiscountFraction, bool randomChoice) {
+		public virtual List<IPathTypeModel> RunAll(IRandomUtility randomUtility, IParcelWrapper originParcel, IParcelWrapper destinationParcel, int outboundTime, int returnTime, int purpose, double tourCostCoefficient, double tourTimeCoefficient, bool isDrivingAge, int householdCars, int transitPassOwnership, bool carsAreAVs, double transitDiscountFraction, bool randomChoice) {
 			//		public virtual List<PathTypeModel_Actum> RunAll(IRandomUtility randomUtility, IActumParcelWrapper originParcel, IActumParcelWrapper destinationParcel, int outboundTime, int returnTime, int purpose, double tourCostCoefficient, double tourTimeCoefficient, bool isDrivingAge, int householdCars, double transitDiscountFraction, bool randomChoice) {
 			var modes = new List<int>();
 
-			for (var mode = Global.Settings.Modes.Walk; mode <= Global.Settings.Modes.Transit; mode++) {
-				modes.Add(mode);
+			//for (var mode = Global.Settings.Modes.Walk; mode <= Global.Settings.Modes.Transit; mode++) {
+			//	modes.Add(mode);
+			//}
+
+			for (var mode = Global.Settings.Modes.Walk; mode <= Global.Settings.Modes.PaidRideShare; mode++) {
+				if (mode <= Global.Settings.Modes.Transit
+				|| (mode == Global.Settings.Modes.PaidRideShare && Global.Configuration.PaidRideShareModeIsAvailable)) {
+					modes.Add(mode);
+				}
 			}
 
-			return Run(randomUtility, originParcel, destinationParcel, outboundTime, returnTime, purpose, tourCostCoefficient, tourTimeCoefficient, isDrivingAge, householdCars, transitPassOwnership, transitDiscountFraction, randomChoice, modes.ToArray());
+
+			return Run(randomUtility, originParcel, destinationParcel, outboundTime, returnTime, purpose, tourCostCoefficient, tourTimeCoefficient, isDrivingAge, householdCars, transitPassOwnership, carsAreAVs, transitDiscountFraction, randomChoice, modes.ToArray());
 		}
 
-		public virtual List<IPathTypeModel> Run(IRandomUtility randomUtility, IParcelWrapper originParcel, IParcelWrapper destinationParcel, int outboundTime, int returnTime, int purpose, double tourCostCoefficient, double tourTimeCoefficient, bool isDrivingAge, int householdCars, int transitPassOwnership, double transitDiscountFraction, bool randomChoice, params int[] modes) {
+		public virtual List<IPathTypeModel> Run(IRandomUtility randomUtility, IParcelWrapper originParcel, IParcelWrapper destinationParcel, int outboundTime, int returnTime, int purpose, double tourCostCoefficient, double tourTimeCoefficient, bool isDrivingAge, int householdCars, int transitPassOwnership, bool carsAreAVs, double transitDiscountFraction, bool randomChoice, params int[] modes) {
 			//		public virtual List<PathTypeModel_Actum> Run(IRandomUtility randomUtility, IActumParcelWrapper originParcel, IActumParcelWrapper destinationParcel, int outboundTime, int returnTime, int purpose, double tourCostCoefficient, double tourTimeCoefficient, bool isDrivingAge, int householdCars, double transitDiscountFraction, bool randomChoice, params int[] modes) {
 			var list = new List<IPathTypeModel>();
 			//			var list = new List<PathTypeModel_Actum>();
 
 			foreach (int mode in modes) {
-				var pathTypeModel = new PathTypeModel_Actum { _originParcel = originParcel, _destinationParcel = destinationParcel, _outboundTime = outboundTime, _returnTime = returnTime, _purpose = purpose, _tourCostCoefficient = tourCostCoefficient, _tourTimeCoefficient = tourTimeCoefficient, _isDrivingAge = isDrivingAge, _householdCars = householdCars, _transitPassOwnership = transitPassOwnership, _transitDiscountFraction = transitDiscountFraction, _randomChoice = randomChoice, Mode = mode };
+				var pathTypeModel = new PathTypeModel_Actum { _originParcel = originParcel, _destinationParcel = destinationParcel, _outboundTime = outboundTime, _returnTime = returnTime, _purpose = purpose, _tourCostCoefficient = tourCostCoefficient, _tourTimeCoefficient = tourTimeCoefficient, _isDrivingAge = isDrivingAge, _householdCars = householdCars, _transitPassOwnership = transitPassOwnership, _carsAreAVs = carsAreAVs, _transitDiscountFraction = transitDiscountFraction, _randomChoice = randomChoice, Mode = mode };
 				pathTypeModel.RunModel(randomUtility);
 
 				list.Add(pathTypeModel);
@@ -147,10 +156,10 @@ namespace Daysim.PathTypeModels {
 			return list;
 		}
 
-		public virtual List<IPathTypeModel> Run(IRandomUtility randomUtility, int originZoneId, int destinationZoneId, int outboundTime, int returnTime, int purpose, double tourCostCoefficient, double tourTimeCoefficient, bool isDrivingAge, int householdCars, int transitPassOwnership, double transitDiscountFraction, bool randomChoice, params int[] modes) {
+		public virtual List<IPathTypeModel> Run(IRandomUtility randomUtility, int originZoneId, int destinationZoneId, int outboundTime, int returnTime, int purpose, double tourCostCoefficient, double tourTimeCoefficient, bool isDrivingAge, int householdCars, int transitPassOwnership, bool carsAreAVs, double transitDiscountFraction, bool randomChoice, params int[] modes) {
 			var list = new List<IPathTypeModel>();
 
-			foreach (var pathTypeModel in modes.Select(mode => new PathTypeModel_Actum { _originZoneId = originZoneId, _destinationZoneId = destinationZoneId, _outboundTime = outboundTime, _returnTime = returnTime, _purpose = purpose, _tourCostCoefficient = tourCostCoefficient, _tourTimeCoefficient = tourTimeCoefficient, _isDrivingAge = isDrivingAge, _householdCars = householdCars, _transitPassOwnership = transitPassOwnership, _transitDiscountFraction = transitDiscountFraction, _randomChoice = randomChoice, Mode = mode })) {
+			foreach (var pathTypeModel in modes.Select(mode => new PathTypeModel_Actum { _originZoneId = originZoneId, _destinationZoneId = destinationZoneId, _outboundTime = outboundTime, _returnTime = returnTime, _purpose = purpose, _tourCostCoefficient = tourCostCoefficient, _tourTimeCoefficient = tourTimeCoefficient, _isDrivingAge = isDrivingAge, _householdCars = householdCars, _transitPassOwnership = transitPassOwnership, _carsAreAVs = carsAreAVs, _transitDiscountFraction = transitDiscountFraction, _randomChoice = randomChoice, Mode = mode })) {
 				pathTypeModel.RunModel(randomUtility, true);
 
 				list.Add(pathTypeModel);
@@ -192,6 +201,7 @@ namespace Daysim.PathTypeModels {
 			//ACTUM End
 
 			var skimMode = (Mode == Global.Settings.Modes.BikeOnTransit) ? Global.Settings.Modes.BikeOnTransit
+				: (Mode == Global.Settings.Modes.PaidRideShare) ? Global.Settings.Modes.HovPassenger
 				: (Mode >= Global.Settings.Modes.CarParkRideWalk) ? Global.Settings.Modes.Transit
 				: Mode;
 			var availablePathTypes = 0;
@@ -212,9 +222,9 @@ namespace Daysim.PathTypeModels {
 				if (Mode == Global.Settings.Modes.Bike || Mode == Global.Settings.Modes.Walk) {
 					RunWalkBikeModel(skimMode, pathType, votValue, useZones, batchNumber);
 				}
-				else if (Mode == Global.Settings.Modes.HovDriver || Mode == Global.Settings.Modes.HovPassenger || Mode == Global.Settings.Modes.Sov) {
+				else if (Mode == Global.Settings.Modes.HovDriver || Mode == Global.Settings.Modes.HovPassenger || Mode == Global.Settings.Modes.Sov || Mode == Global.Settings.Modes.PaidRideShare) {
 					if (Mode != Global.Settings.Modes.Sov || (_isDrivingAge && _householdCars > 0)) {
-						RunAutoModelNew(skimMode, pathType, votValue, useZones);
+						RunAutoModelNew(Mode, pathType, votValue, useZones);
 					}
 				}
 				else if (Mode == Global.Settings.Modes.Transit) {
@@ -661,7 +671,7 @@ namespace Daysim.PathTypeModels {
 							: _outboundTime.IsLeftExclusiveBetween(Global.Settings.Times.EightAM, Global.Settings.Times.SixPM)
 								? _destinationParcel.ParkingCostPerHour8_18
 							: //_outboundTime.IsLeftExclusiveBetween(Global.Settings.Times.SixPM, Global.Settings.Times.ElevenPM)
-					//?
+							  //?
 							_destinationParcel.ParkingCostPerHour18_23;
 				var parkingDuration = 1; // assume 1 our if return time isn't known
 				if (_returnTime > 0) {
@@ -711,7 +721,7 @@ namespace Daysim.PathTypeModels {
 						: _outboundTime.IsLeftExclusiveBetween(Global.Settings.Times.FivePM, Global.Settings.Times.SixPM)
 							? _destinationParcel.ParkingSearchTime17_18
 						: //_outboundTime.IsLeftExclusiveBetween(Global.Settings.Times.SixPM, Global.Settings.Times.NinePM)
-					//?
+						  //?
 							_destinationParcel.ParkingSearchTime18_21;
 			}
 			//extraTime += _destinationParcel.ParkingOffStreetPaidHourlyPrice; //this property represents average search time per trip in Actum data
@@ -837,14 +847,22 @@ namespace Daysim.PathTypeModels {
 
 		}
 
-		private void RunAutoModelNew(int skimMode, int pathType, double votValue, bool useZones) {
+		private void RunAutoModelNew(int skimModeIn, int pathType, double votValue, bool useZones) {
+			bool useAVVOT = ((skimModeIn != Global.Settings.Modes.PaidRideShare && _carsAreAVs && Global.Configuration.AV_IncludeAutoTypeChoice)
+								|| (skimModeIn == Global.Settings.Modes.PaidRideShare && Global.Configuration.AV_PaidRideShareModeUsesAVs));
 
-			var path = GetAutoPath(skimMode, pathType, votValue, useZones, _originZoneId, _destinationZoneId, _originParcel, _destinationParcel);
+			// bool useAVSkims = (useAVVOT && Global.Configuration.AV_UseSeparateAVSkimMatrices);
+
+			// var skimMode = useAVSkims ? Global.Settings.Modes.AV
+			//              : (skimModeIn == Global.Settings.Modes.PaidRideShare) ? Global.Settings.Modes.HovPassenger : skimModeIn;
+
+
+			var path = GetAutoPath(skimModeIn, pathType, votValue, useZones, useAVVOT, _originZoneId, _destinationZoneId, _originParcel, _destinationParcel);
 
 			//calculate parking cost utility   JLB 201508
 			var parkingCost = 0.0;
 			var parkingUtility = 0.0;
-			if (skimMode == Global.Settings.Modes.HovPassenger && !Global.Configuration.HOVPassengersIncurCosts) {
+			if ((skimModeIn == Global.Settings.Modes.HovPassenger && !Global.Configuration.HOVPassengersIncurCosts) || skimModeIn == Global.Settings.Modes.PaidRideShare) {
 			}
 			else {
 				if (!useZones) {
@@ -856,7 +874,7 @@ namespace Daysim.PathTypeModels {
 								: _outboundTime.IsLeftExclusiveBetween(Global.Settings.Times.EightAM, Global.Settings.Times.SixPM)
 									? _destinationParcel.ParkingCostPerHour8_18
 								: //_outboundTime.IsLeftExclusiveBetween(Global.Settings.Times.SixPM, Global.Settings.Times.ElevenPM)
-						//?
+								  //?
 								_destinationParcel.ParkingCostPerHour18_23;
 					var parkingDuration = 1; // assume 1 hour if return time isn't known
 					if (_returnTime > 0) {
@@ -1250,7 +1268,8 @@ namespace Daysim.PathTypeModels {
 				var oStationWalkDistance = 2.0 * node.LengthToStopArea / Global.Settings.LengthUnitsPerFoot / 5280 * Global.Settings.DistanceUnitsPerMile;  // in DistanceUnits
 				var oStationWalkTime = oStationWalkDistance * Global.PathImpedance_WalkMinutesPerDistanceUnit;
 
-				var autoPath = GetAutoPath(Global.Settings.Modes.Sov, Global.Settings.PathTypes.FullNetwork, votValue, useZones, originZoneId, parkAndRideZoneId, _originParcel, parkAndRideParcel);
+				bool useAVVOT = _carsAreAVs;
+				var autoPath = GetAutoPath(Global.Settings.Modes.Sov, Global.Settings.PathTypes.FullNetwork, votValue, useZones, useAVVOT, originZoneId, parkAndRideZoneId, _originParcel, parkAndRideParcel);
 
 				//loop on stop areas near destination
 				for (var dIndex = dFirst; dIndex <= dLast; dIndex++) {
@@ -1558,7 +1577,7 @@ namespace Daysim.PathTypeModels {
 			var waitTime = ImpedanceRoster.GetValue("waittime", skimMode, pathType, votValue, outboundTime, originZoneId, destinationZoneId).Variable;  // was transfer wait time
 			var fareCard10 = ImpedanceRoster.GetValue("farecard10", skimMode, pathType, votValue, outboundTime, originZoneId, destinationZoneId).Variable;
 			//var fareCardMonth = ImpedanceRoster.GetValue("farecardmonth", skimMode, pathType, votValue, outboundTime, originZoneId, destinationZoneId).Variable;
-			var extraFareCard10 = skimMode == Global.Settings.Modes.BikeOnTransit? ImpedanceRoster.GetValue("farecard10", skimMode, pathType, votValue, outboundTime, originZoneId, destinationZoneId).Variable : 0;
+			var extraFareCard10 = skimMode == Global.Settings.Modes.BikeOnTransit ? ImpedanceRoster.GetValue("farecard10", skimMode, pathType, votValue, outboundTime, originZoneId, destinationZoneId).Variable : 0;
 			//var accessEgressTime = ImpedanceRoster.GetValue("accegrtime", skimMode, pathType, votValue, outboundTime, originZoneId, destinationZoneId).Variable;
 			var fTime = ImpedanceRoster.GetValue("invehtimeferry", skimMode, pathType, votValue, outboundTime, originZoneId, destinationZoneId).Variable;
 			var gTime = ImpedanceRoster.GetValue("invehtimemetro", skimMode, pathType, votValue, outboundTime, originZoneId, destinationZoneId).Variable;
@@ -1575,7 +1594,7 @@ namespace Daysim.PathTypeModels {
 				firstAndHiddenWaitTime += ImpedanceRoster.GetValue("firstandhiddenwaittime", skimMode, pathType, votValue, returnTime, destinationZoneId, originZoneId).Variable;
 				waitTime += ImpedanceRoster.GetValue("waittime", skimMode, pathType, votValue, returnTime, destinationZoneId, originZoneId).Variable;
 				fareCard10 += ImpedanceRoster.GetValue("farecard10", skimMode, pathType, votValue, returnTime, destinationZoneId, originZoneId).Variable;
-				extraFareCard10 += skimMode == Global.Settings.Modes.BikeOnTransit? ImpedanceRoster.GetValue("farecard10", skimMode, pathType, votValue, returnTime, destinationZoneId, originZoneId).Variable : 0;
+				extraFareCard10 += skimMode == Global.Settings.Modes.BikeOnTransit ? ImpedanceRoster.GetValue("farecard10", skimMode, pathType, votValue, returnTime, destinationZoneId, originZoneId).Variable : 0;
 				//fareCardMonth += ImpedanceRoster.GetValue("farecardmonth", skimMode, pathType, votValue, returnTime, destinationZoneId, originZoneId).Variable;
 				//accessEgressTime += ImpedanceRoster.GetValue("accegrtime", skimMode, pathType, votValue, returnTime, destinationZoneId, originZoneId).Variable;
 				fTime += ImpedanceRoster.GetValue("invehtimeferry", skimMode, pathType, votValue, returnTime, destinationZoneId, originZoneId).Variable;
@@ -1697,7 +1716,12 @@ namespace Daysim.PathTypeModels {
 			public double Utility { get; set; }
 		}
 
-		private PathTypeModel_Actum.AutoPath GetAutoPath(int skimMode, int pathType, double votValue, bool useZones, int originZoneId, int destinationZoneId, IParcelWrapper originParcel, IParcelWrapper destinationParcel) {
+		private PathTypeModel_Actum.AutoPath GetAutoPath(int skimModeIn, int pathType, double votValue, bool useZones, bool useAVVOT, int originZoneId, int destinationZoneId, IParcelWrapper originParcel, IParcelWrapper destinationParcel) {
+
+			bool useAVSkims = (useAVVOT && Global.Configuration.AV_UseSeparateAVSkimMatrices);
+
+			var skimMode = useAVSkims ? Global.Settings.Modes.AV
+							 : (skimModeIn == Global.Settings.Modes.PaidRideShare) ? Global.Settings.Modes.HovPassenger : skimModeIn;
 
 			var path = new PathTypeModel_Actum.AutoPath();
 			path.Available = true;
@@ -1755,7 +1779,7 @@ namespace Daysim.PathTypeModels {
 			var extraTime = extraSkimValue.Variable;
 
 			var searchMinutes = 0.0;
-			if (!useZones) {
+			if ((!useZones) && (!(skimModeIn == Global.Settings.Modes.PaidRideShare))) {
 				//time.DeparturePeriod.Middle.IsLeftExclusiveBetween(Global.Settings.Times.TenPM, Global.Settings.Times.MinutesInADay).ToFlag()
 				searchMinutes =
 					_outboundTime.IsLeftExclusiveBetween(Global.Settings.Times.NinePM, Global.Settings.Times.MinutesInADay)
@@ -1779,7 +1803,7 @@ namespace Daysim.PathTypeModels {
 						: _outboundTime.IsLeftExclusiveBetween(Global.Settings.Times.FivePM, Global.Settings.Times.SixPM)
 							? destinationParcel.ParkingSearchTime17_18
 						: //_outboundTime.IsLeftExclusiveBetween(Global.Settings.Times.SixPM, Global.Settings.Times.NinePM)
-					//?
+						  //?
 							destinationParcel.ParkingSearchTime18_21;
 			}
 			extraTime += searchMinutes;
@@ -1831,6 +1855,14 @@ namespace Daysim.PathTypeModels {
 				cost1 += distance1 * centsPerMile / 100.0;
 			}
 
+			if (skimModeIn == Global.Settings.Modes.PaidRideShare) {
+				var extraCostPerDistanceUnit = Global.Configuration.AV_PaidRideShareModeUsesAVs ?
+				Global.Configuration.AV_PaidRideShare_ExtraCostPerDistanceUnit : Global.Configuration.PaidRideShare_ExtraCostPerDistanceUnit;
+				var fixedCostPerRide = Global.Configuration.AV_PaidRideShareModeUsesAVs ?
+				Global.Configuration.AV_PaidRideShare_FixedCostPerRide : Global.Configuration.PaidRideShare_FixedCostPerRide;
+				cost1 += distance1 * extraCostPerDistanceUnit + fixedCostPerRide;
+			}
+
 			//calculate costs on return
 			var cost2 = 0.0;
 			if (_returnTime > 0) {
@@ -1849,9 +1881,18 @@ namespace Daysim.PathTypeModels {
 									? Global.Configuration.Policy_CentsPerMileBetweenPeaks : Global.Configuration.Policy_CentsPerMileOutsidePeaks;
 					cost2 += distance2 * centsPerMile / 100.0;
 				}
+				if (skimModeIn == Global.Settings.Modes.PaidRideShare) {
+					var extraCostPerDistanceUnit = Global.Configuration.AV_PaidRideShareModeUsesAVs ?
+					Global.Configuration.AV_PaidRideShare_ExtraCostPerDistanceUnit : Global.Configuration.PaidRideShare_ExtraCostPerDistanceUnit;
+					var fixedCostPerRide = Global.Configuration.AV_PaidRideShareModeUsesAVs ?
+					Global.Configuration.AV_PaidRideShare_FixedCostPerRide : Global.Configuration.PaidRideShare_FixedCostPerRide;
+					cost2 += distance2 * extraCostPerDistanceUnit + fixedCostPerRide;
+				}
 			}
-			path.Cost = cost1 + cost2 + path.Distance * Global.PathImpedance_AutoOperatingCostPerDistanceUnit;
-
+			path.Cost = cost1 + cost2;
+			if (!(skimModeIn == Global.Settings.Modes.PaidRideShare)) {
+				path.Cost = cost1 + cost2 + path.Distance * Global.PathImpedance_AutoOperatingCostPerDistanceUnit;
+			}
 			//calculate time utility
 			var gammaFreeFlowTime = GammaFunction(freeFlowTime, Global.Configuration.PathImpedance_Gamma_InVehicleTime);
 			extraTime = Global.Configuration.Policy_CongestedTravelTimeMultiplier != 0 ? extraTime * Global.Configuration.Policy_CongestedTravelTimeMultiplier : extraTime;
@@ -1919,10 +1960,14 @@ namespace Daysim.PathTypeModels {
 				gammaCost = GammaFunction(path.Cost, Global.Configuration.PathImpedance_Gamma_Cost);
 			}
 
+			var autoTimeCoefficient = useAVVOT
+				 ? _tourTimeCoefficient * (1.0 - Global.Configuration.AV_InVehicleTimeCoefficientDiscountFactor) : _tourTimeCoefficient;
+
+
 			//combine time and cost utility
 			path.Utility = Global.Configuration.PathImpedance_PathChoiceScaleFactor
 				* (_tourCostCoefficient * gammaCost
-				+ _tourTimeCoefficient * inVehicleTimeWeight
+				+ autoTimeCoefficient * inVehicleTimeWeight
 				* (gammaFreeFlowTime + gammaExtraTime * inVehicleExtraTimeWeight)
 				+ tollConstant);
 
@@ -2021,7 +2066,8 @@ namespace Daysim.PathTypeModels {
 				var oStationWalkDistance = 2.0 * node.LengthToStopArea / Global.Settings.LengthUnitsPerFoot / 5280 * Global.Settings.DistanceUnitsPerMile;  // in DistanceUnits
 				var oStationWalkTime = oStationWalkDistance * Global.PathImpedance_WalkMinutesPerDistanceUnit;
 
-				var autoPath = GetAutoPath(Global.Settings.Modes.Sov, Global.Settings.PathTypes.FullNetwork, votValue, useZones, originZoneId, parkAndRideZoneId, _originParcel, parkAndRideParcel);
+				bool useAVVOT = false;
+				var autoPath = GetAutoPath(Global.Settings.Modes.Sov, Global.Settings.PathTypes.FullNetwork, votValue, useZones, useAVVOT, originZoneId, parkAndRideZoneId, _originParcel, parkAndRideParcel);
 
 				//loop on bike parking nodes near destination
 				for (var dIndex = dFirst; dIndex <= dLast; dIndex++) {
@@ -2564,12 +2610,12 @@ namespace Daysim.PathTypeModels {
 		//}}
 
 		private void RunStopAreaBikeOnTransitModel(int skimMode, int pathType, double votValue, bool useZones) {
-//			var stopAreaReader =
-//				Global
-//					.Kernel
-//					.Get<IPersistenceFactory<ITransitStopArea>>()
-//					.Reader;
-//			var eligibleTerminals = stopAreaReader.Where(s => s.BikeOnBoardTerminal == 1).ToDictionary(z => z.Key, z => z);
+			//			var stopAreaReader =
+			//				Global
+			//					.Kernel
+			//					.Get<IPersistenceFactory<ITransitStopArea>>()
+			//					.Reader;
+			//			var eligibleTerminals = stopAreaReader.Where(s => s.BikeOnBoardTerminal == 1).ToDictionary(z => z.Key, z => z);
 			var eligibleTerminals = Global.TransitStopAreas.Where(s => s.BikeOnBoardTerminal == 1).ToDictionary(z => z.Key, z => z);
 			if (ChoiceModelFactory.ParkAndRideNodeDao == null || _returnTime <= 0) {
 				return;

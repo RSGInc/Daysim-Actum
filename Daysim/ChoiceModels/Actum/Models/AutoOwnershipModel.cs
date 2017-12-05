@@ -15,6 +15,7 @@ using Daysim.DomainModels.Extensions;
 using Daysim.Framework.ChoiceModels;
 using Daysim.Framework.Coefficients;
 using Daysim.Framework.Core;
+using Daysim.Framework.Roster;
 using Daysim.Framework.DomainModels.Wrappers;
 
 namespace Daysim.ChoiceModels.Actum.Models {
@@ -23,7 +24,7 @@ namespace Daysim.ChoiceModels.Actum.Models {
 		private const int TOTAL_ALTERNATIVES = 3;
 		private const int TOTAL_NESTED_ALTERNATIVES = 0;
 		private const int TOTAL_LEVELS = 1;
-		private const int MAX_PARAMETER = 84;
+		private const int MAX_PARAMETER = 234;
 
 		public override void RunInitialize(ICoefficientsReader reader = null) {
 			Initialize(CHOICE_MODEL_NAME, Global.Configuration.AutoOwnershipModelCoefficients, TOTAL_ALTERNATIVES, TOTAL_NESTED_ALTERNATIVES, TOTAL_LEVELS, MAX_PARAMETER, reader as CoefficientsReader);
@@ -40,6 +41,14 @@ namespace Daysim.ChoiceModels.Actum.Models {
 				if (Global.Configuration.EstimationModel != CHOICE_MODEL_NAME) {
 					return;
 				}
+			}
+			else if (Global.Configuration.AV_IncludeAutoTypeChoice) {
+				var AVchoiceProbabilityCalculator = _helpers[ParallelUtility.GetBatchFromThreadId()].GetChoiceProbabilityCalculator(household.Id);
+				RunAVModel(AVchoiceProbabilityCalculator, household);
+				var chosenAlternative = AVchoiceProbabilityCalculator.SimulateChoice(household.RandomUtility);
+				var choice = (int) chosenAlternative.Choice;
+
+				household.OwnsAutomatedVehicles = choice;
 			}
 
 			var choiceProbabilityCalculator = _helpers[ParallelUtility.GetBatchFromThreadId()].GetChoiceProbabilityCalculator(household.Id);
@@ -66,18 +75,53 @@ namespace Daysim.ChoiceModels.Actum.Models {
 		}
 
 		private void RunModel(ChoiceProbabilityCalculator choiceProbabilityCalculator, HouseholdWrapper household, int choice = Constants.DEFAULT_VALUE) {
-			//			var distanceToTransitCappedUnderQtrMile = household.ResidenceParcel.DistanceToTransitCappedUnderQtrMile();
-			//			var distanceToTransitQtrToHalfMile = household.ResidenceParcel.DistanceToTransitQtrToHalfMile();
-			var foodRetailServiceMedicalLogBuffer1 = household.ResidenceParcel.FoodRetailServiceMedicalLogBuffer1();
+			//			//			var distanceToTransitCappedUnderQtrMile = household.ResidenceParcel.DistanceToTransitCappedUnderQtrMile();
+			//			//			var distanceToTransitQtrToHalfMile = household.ResidenceParcel.DistanceToTransitQtrToHalfMile();
+			//var foodRetailServiceMedicalLogBuffer1 = household.ResidenceParcel.FoodRetailServiceMedicalLogBuffer1();
 
 			var workTourLogsumDifference = 0D; // (full or part-time workers) full car ownership vs. no car ownership
 			var schoolTourLogsumDifference = 0D; // (school) full car ownership vs. no car ownership
-			//			const double workTourOtherLogsumDifference = 0D; // (other workers) full car ownership vs. no car ownership
-
-			// Stefan
+															 //															 //			const double workTourOtherLogsumDifference = 0D; // (other workers) full car ownership vs. no car ownership
+															 //
+															 // Stefan
 			var netIncome = (household.Income / 1000.0) / 2.0; // in 1000s of DKK
 			var userCost = 2.441 * 15.0;  //annual cost to use 1 car in 1000s of DKK
-			bool isInCopenhagenMunicipality = true; //household.ResidenceParcel.Municipality == 101;  Need to change this after Municipality property is added to Actum parcel file
+			bool isInCopenhagenMunicipality = household.MunicipalCode == 101;  
+
+			bool municipality101 = household.MunicipalCode == 101;
+			bool municipality147 = household.MunicipalCode == 147;
+			bool municipality151 = household.MunicipalCode == 151;
+			bool municipality153 = household.MunicipalCode == 153;
+			bool municipality155 = household.MunicipalCode == 155;
+			bool municipality157 = household.MunicipalCode == 157;
+			bool municipality159 = household.MunicipalCode == 159;
+			bool municipality161 = household.MunicipalCode == 161;
+			bool municipality163 = household.MunicipalCode == 163;
+			bool municipality165 = household.MunicipalCode == 165;
+			bool municipality167 = household.MunicipalCode == 167;
+			bool municipality169 = household.MunicipalCode == 169;
+			bool municipality173 = household.MunicipalCode == 173;
+			bool municipality175 = household.MunicipalCode == 175;
+			bool municipality183 = household.MunicipalCode == 183;
+			bool municipality185 = household.MunicipalCode == 185;
+			bool municipality187 = household.MunicipalCode == 187;
+			bool municipality190 = household.MunicipalCode == 190;
+			bool municipality201 = household.MunicipalCode == 201;
+			bool municipality210 = household.MunicipalCode == 210;
+			bool municipality217 = household.MunicipalCode == 217;
+			bool municipality219 = household.MunicipalCode == 219;
+			bool municipality223 = household.MunicipalCode == 223;
+			bool municipality230 = household.MunicipalCode == 230;
+			bool municipality240 = household.MunicipalCode == 240;
+			bool municipality250 = household.MunicipalCode == 250;
+			bool municipality253 = household.MunicipalCode == 253;
+			bool municipality259 = household.MunicipalCode == 259;
+			bool municipality260 = household.MunicipalCode == 260;
+			bool municipality265 = household.MunicipalCode == 265;
+			bool municipality269 = household.MunicipalCode == 269;
+			bool municipality270 = household.MunicipalCode == 270;
+			bool municipality336 = household.MunicipalCode == 336;
+			bool municipality350 = household.MunicipalCode == 350;
 
 			int numberAdults = 0;
 			int numberChildren = 0;
@@ -90,7 +134,7 @@ namespace Daysim.ChoiceModels.Actum.Models {
 				if (person.IsWorker && person.UsualWorkParcel != null && person.UsualWorkParcelId != household.ResidenceParcelId) {
 					var destinationArrivalTime = ChoiceModelUtility.GetDestinationArrivalTime(Global.Settings.Models.WorkTourModeModel);
 					var destinationDepartureTime = ChoiceModelUtility.GetDestinationDepartureTime(Global.Settings.Models.WorkTourModeModel);
-									//JLB 201602
+					//JLB 201602
 					//var nestedAlternative1 = Global.ChoiceModelSession.Get<WorkTourModeTimeModel>().RunNested(person, household.ResidenceParcel, person.UsualWorkParcel, destinationArrivalTime, destinationDepartureTime, household.HouseholdTotals.DrivingAgeMembers, 0.0);
 					//var nestedAlternative2 = Global.ChoiceModelSession.Get<WorkTourModeTimeModel>().RunNested(person, household.ResidenceParcel, person.UsualWorkParcel, destinationArrivalTime, destinationDepartureTime, 0, 0.0);
 					var nestedAlternative1 = Global.ChoiceModelSession.Get<TourModeTimeModel>().RunNested(person, household.ResidenceParcel, person.UsualWorkParcel, destinationArrivalTime, destinationDepartureTime, household.HouseholdTotals.DrivingAgeMembers, 0.0, Global.Settings.Purposes.Work);
@@ -104,12 +148,12 @@ namespace Daysim.ChoiceModels.Actum.Models {
 					var destinationArrivalTime = ChoiceModelUtility.GetDestinationArrivalTime(Global.Settings.Models.SchoolTourModeModel);
 					var destinationDepartureTime = ChoiceModelUtility.GetDestinationDepartureTime(Global.Settings.Models.SchoolTourModeModel);
 
-					//TODO: uncomment the following school logsum retrievals when estimating this model after schoolTourModeTimeModel is enhanced for COMPAS2 
-					//var nestedAlternative1 = Global.ChoiceModelSession.Get<SchoolTourModeTimeModel>().RunNested(person, household.ResidenceParcel, person.UsualSchoolParcel, destinationArrivalTime, destinationDepartureTime, household.HouseholdTotals.DrivingAgeMembers, 0.0);
-					//var nestedAlternative2 = Global.ChoiceModelSession.Get<SchoolTourModeTimeModel>().RunNested(person, household.ResidenceParcel, person.UsualSchoolParcel, destinationArrivalTime, destinationDepartureTime, 0, 0.0);
+					//TODO: change the following school logsum retrievals when estimating this model after schoolTourModeTimeModel is enhanced for COMPAS2 
+					var nestedAlternative1 = Global.ChoiceModelSession.Get<TourModeTimeModel>().RunNested(person, household.ResidenceParcel, person.UsualSchoolParcel, destinationArrivalTime, destinationDepartureTime, household.HouseholdTotals.DrivingAgeMembers, 0.0, Global.Settings.Purposes.School);
+					var nestedAlternative2 = Global.ChoiceModelSession.Get<TourModeTimeModel>().RunNested(person, household.ResidenceParcel, person.UsualSchoolParcel, destinationArrivalTime, destinationDepartureTime, 0, 0.0, Global.Settings.Purposes.School);
 
-					//schoolTourLogsumDifference += nestedAlternative1 == null ? 0 : nestedAlternative1.ComputeLogsum();
-					//schoolTourLogsumDifference -= nestedAlternative2 == null ? 0 : nestedAlternative2.ComputeLogsum();
+					schoolTourLogsumDifference += nestedAlternative1 == null ? 0 : nestedAlternative1.ComputeLogsum();
+					schoolTourLogsumDifference -= nestedAlternative2 == null ? 0 : nestedAlternative2.ComputeLogsum();
 				}
 				if (person.Age >= 18) {
 					numberAdults++;
@@ -136,11 +180,65 @@ namespace Daysim.ChoiceModels.Actum.Models {
 			//	Global.AggregateLogsums[household.ResidenceZoneId][Global.Settings.Purposes.HomeBasedComposite][Global.Settings.CarOwnerships.OneOrMoreCarsPerAdult][votSegment][taSegment] -
 			//	Global.AggregateLogsums[household.ResidenceZoneId][Global.Settings.Purposes.HomeBasedComposite][Global.Settings.CarOwnerships.NoCars][votSegment][taSegment];
 
+			//var distanceToStop
+			//	 = household.ResidenceParcel.GetDistanceToTransit() > 0
+			//			 ? Math.Min(household.ResidenceParcel.GetDistanceToTransit(), 2 * Global.Settings.DistanceUnitsPerMile)  // JLBscale
+			//			 : 2 * Global.Settings.DistanceUnitsPerMile;
+
+			//var ruralFlag = household.ResidenceParcel.RuralFlag();
+
+			var zeroVehAVEffect = (Global.Configuration.AV_IncludeAutoTypeChoice && household.OwnsAutomatedVehicles > 0) ? Global.Configuration.AV_Own0VehiclesCoefficientForAVHouseholds : 0;
+			var oneVehAVEffect = (Global.Configuration.AV_IncludeAutoTypeChoice && household.OwnsAutomatedVehicles > 0) ? Global.Configuration.AV_Own1VehicleCoefficientForAVHouseholds : 0;
+
+			var zeroVehSEEffect = (Global.Configuration.PaidRideShareModeIsAvailable && Global.Configuration.AV_PaidRideShareModeUsesAVs) ? Global.Configuration.AV_SharingEconomy_DensityCoefficientForOwning0Vehicles * Math.Min(household.ResidenceBuffer2Density, 6000) : 0;
+			var oneVehSEEffect = (Global.Configuration.PaidRideShareModeIsAvailable && Global.Configuration.AV_PaidRideShareModeUsesAVs) ? Global.Configuration.AV_SharingEconomy_ConstantForOwning1Vehicle : 0;
+			var twoVehSEEffect = (Global.Configuration.PaidRideShareModeIsAvailable && Global.Configuration.AV_PaidRideShareModeUsesAVs) ? Global.Configuration.AV_SharingEconomy_ConstantForOwning2Vehicles : 0;
+			//var threeVehSEEffect = (Global.Configuration.PaidRideShareModeIsAvailable && Global.Configuration.AV_PaidRideShareModeUsesAVs) ? Global.Configuration.AV_SharingEconomy_ConstantForOwning3Vehicles : 0;
+			//var fourVehSEEffect = (Global.Configuration.PaidRideShareModeIsAvailable && Global.Configuration.AV_PaidRideShareModeUsesAVs) ? Global.Configuration.AV_SharingEconomy_ConstantForOwning4Vehicles : 0;
+
 			// 0 AUTOS
 
 			var alternative = choiceProbabilityCalculator.GetAlternative(0, true, choice == 0);
 			alternative.Choice = 0;
 			alternative.AddUtilityTerm(14, Math.Log(Math.Max(netIncome, 1)));
+			alternative.AddUtilityTerm(15, workTourLogsumDifference);  // instead of all Stefan's work-related and logsum variables
+			alternative.AddUtilityTerm(90, 1); //calibration constant
+			alternative.AddUtilityTerm(100, zeroVehAVEffect);
+			alternative.AddUtilityTerm(100, zeroVehSEEffect);
+			alternative.AddUtilityTerm(101, municipality101.ToFlag());
+			alternative.AddUtilityTerm(102, municipality147.ToFlag());
+			alternative.AddUtilityTerm(103, municipality151.ToFlag());
+			alternative.AddUtilityTerm(104, municipality153.ToFlag());
+			alternative.AddUtilityTerm(105, municipality155.ToFlag());
+			alternative.AddUtilityTerm(106, municipality157.ToFlag());
+			alternative.AddUtilityTerm(107, municipality159.ToFlag());
+			alternative.AddUtilityTerm(108, municipality161.ToFlag());
+			alternative.AddUtilityTerm(109, municipality163.ToFlag());
+			alternative.AddUtilityTerm(110, municipality165.ToFlag());
+			alternative.AddUtilityTerm(111, municipality167.ToFlag());
+			alternative.AddUtilityTerm(112, municipality169.ToFlag());
+			alternative.AddUtilityTerm(113, municipality173.ToFlag());
+			alternative.AddUtilityTerm(114, municipality175.ToFlag());
+			alternative.AddUtilityTerm(115, municipality183.ToFlag());
+			alternative.AddUtilityTerm(116, municipality185.ToFlag());
+			alternative.AddUtilityTerm(117, municipality187.ToFlag());
+			alternative.AddUtilityTerm(118, municipality190.ToFlag());
+			alternative.AddUtilityTerm(119, municipality201.ToFlag());
+			alternative.AddUtilityTerm(120, municipality210.ToFlag());
+			alternative.AddUtilityTerm(121, municipality217.ToFlag());
+			alternative.AddUtilityTerm(122, municipality219.ToFlag());
+			alternative.AddUtilityTerm(123, municipality223.ToFlag());
+			alternative.AddUtilityTerm(124, municipality230.ToFlag());
+			alternative.AddUtilityTerm(125, municipality240.ToFlag());
+			alternative.AddUtilityTerm(126, municipality250.ToFlag());
+			alternative.AddUtilityTerm(127, municipality253.ToFlag());
+			alternative.AddUtilityTerm(128, municipality259.ToFlag());
+			alternative.AddUtilityTerm(129, municipality260.ToFlag());
+			alternative.AddUtilityTerm(130, municipality265.ToFlag());
+			alternative.AddUtilityTerm(131, municipality269.ToFlag());
+			alternative.AddUtilityTerm(132, municipality270.ToFlag());
+			alternative.AddUtilityTerm(133, municipality336.ToFlag());
+			alternative.AddUtilityTerm(134, municipality350.ToFlag());
 
 
 			// 1 AUTO
@@ -202,7 +300,10 @@ namespace Daysim.ChoiceModels.Actum.Models {
 			//alternative.AddUtilityTerm(25, isInCopenhagenMunicipality.ToFlag());
 			alternative.AddUtilityTerm(26, stefanOneCarUtility);  //this composite replaces above separate terms 10-25
 
-			alternative.AddUtilityTerm(27, workTourLogsumDifference);  // instead of all Stefan's work-related and logsum variables
+			alternative.AddUtilityTerm(27, workTourLogsumDifference * household.HasMoreDriversThan1.ToFlag());  // instead of all Stefan's work-related and logsum variables
+			alternative.AddUtilityTerm(91, 1); //calibration constant
+			alternative.AddUtilityTerm(100, oneVehAVEffect);
+			alternative.AddUtilityTerm(100, oneVehSEEffect);
 
 			//alternative.AddUtilityTerm(24, household.HouseholdTotals.RetiredAdultsPerDrivingAgeMembers);
 			//alternative.AddUtilityTerm(25, household.HouseholdTotals.UniversityStudentsPerDrivingAgeMembers);
@@ -267,14 +368,97 @@ namespace Daysim.ChoiceModels.Actum.Models {
 			//alternative.AddUtilityTerm(54, household.ResidenceParcel.DistanceToExpressBus);
 			//alternative.AddUtilityTerm(55, isInCopenhagenMunicipality.ToFlag());
 			alternative.AddUtilityTerm(56, stefanTwoCarUtility);  //this composite replaces above separate terms 40-55
-	
-			alternative.AddUtilityTerm(57, workTourLogsumDifference);
+
+			//alternative.AddUtilityTerm(57, workTourLogsumDifference);
+			alternative.AddUtilityTerm(92, 1); //new calibration constant - must be constrained to 0 in estimation
+			alternative.AddUtilityTerm(100, twoVehSEEffect);
+			alternative.AddUtilityTerm(201, municipality101.ToFlag());
+			alternative.AddUtilityTerm(202, municipality147.ToFlag());
+			alternative.AddUtilityTerm(203, municipality151.ToFlag());
+			alternative.AddUtilityTerm(204, municipality153.ToFlag());
+			alternative.AddUtilityTerm(205, municipality155.ToFlag());
+			alternative.AddUtilityTerm(206, municipality157.ToFlag());
+			alternative.AddUtilityTerm(207, municipality159.ToFlag());
+			alternative.AddUtilityTerm(208, municipality161.ToFlag());
+			alternative.AddUtilityTerm(209, municipality163.ToFlag());
+			alternative.AddUtilityTerm(210, municipality165.ToFlag());
+			alternative.AddUtilityTerm(211, municipality167.ToFlag());
+			alternative.AddUtilityTerm(212, municipality169.ToFlag());
+			alternative.AddUtilityTerm(213, municipality173.ToFlag());
+			alternative.AddUtilityTerm(214, municipality175.ToFlag());
+			alternative.AddUtilityTerm(215, municipality183.ToFlag());
+			alternative.AddUtilityTerm(216, municipality185.ToFlag());
+			alternative.AddUtilityTerm(217, municipality187.ToFlag());
+			alternative.AddUtilityTerm(218, municipality190.ToFlag());
+			alternative.AddUtilityTerm(219, municipality201.ToFlag());
+			alternative.AddUtilityTerm(220, municipality210.ToFlag());
+			alternative.AddUtilityTerm(221, municipality217.ToFlag());
+			alternative.AddUtilityTerm(222, municipality219.ToFlag());
+			alternative.AddUtilityTerm(223, municipality223.ToFlag());
+			alternative.AddUtilityTerm(224, municipality230.ToFlag());
+			alternative.AddUtilityTerm(225, municipality240.ToFlag());
+			alternative.AddUtilityTerm(226, municipality250.ToFlag());
+			alternative.AddUtilityTerm(227, municipality253.ToFlag());
+			alternative.AddUtilityTerm(228, municipality259.ToFlag());
+			alternative.AddUtilityTerm(229, municipality260.ToFlag());
+			alternative.AddUtilityTerm(230, municipality265.ToFlag());
+			alternative.AddUtilityTerm(231, municipality269.ToFlag());
+			alternative.AddUtilityTerm(232, municipality270.ToFlag());
+			alternative.AddUtilityTerm(233, municipality336.ToFlag());
+			alternative.AddUtilityTerm(234, municipality350.ToFlag());
 
 			//alternative.AddUtilityTerm(44, household.HouseholdTotals.RetiredAdultsPerDrivingAgeMembers);
 			//alternative.AddUtilityTerm(45, household.HouseholdTotals.UniversityStudentsPerDrivingAgeMembers);
 			//alternative.AddUtilityTerm(46, household.HouseholdTotals.DrivingAgeStudentsPerDrivingAgeMembers);
 			//alternative.AddUtilityTerm(47, household.HouseholdTotals.HomeBasedPersonsPerDrivingAgeMembers);
 
+		}
+		private void RunAVModel(ChoiceProbabilityCalculator choiceProbabilityCalculator, IHouseholdWrapper household, int choice = Constants.DEFAULT_VALUE) {
+
+			int ageOfHouseholdHead = 0;
+			double totalCommuteTime = 0;
+
+			foreach (var person in household.Persons) {
+
+				if (person.Sequence == 1) {
+					ageOfHouseholdHead = person.Age;
+				}
+				if (person.IsWorker && person.UsualWorkParcel != null && person.UsualWorkParcelId != household.ResidenceParcelId) {
+					var destinationArrivalTime = ChoiceModelUtility.GetDestinationArrivalTime(Global.Settings.Models.WorkTourModeModel);
+					var destinationDepartureTime = ChoiceModelUtility.GetDestinationDepartureTime(Global.Settings.Models.WorkTourModeModel);
+
+					totalCommuteTime += ImpedanceRoster.GetValue("ivtime", Global.Settings.Modes.Sov, Global.Settings.PathTypes.FullNetwork, Global.Configuration.VotHighVeryHigh - 0.5,
+					  destinationArrivalTime, household.ResidenceParcel, person.UsualWorkParcel).Variable;
+					totalCommuteTime += ImpedanceRoster.GetValue("ivtime", Global.Settings.Modes.Sov, Global.Settings.PathTypes.FullNetwork, Global.Configuration.VotHighVeryHigh - 0.5,
+					  destinationDepartureTime, person.UsualWorkParcel, household.ResidenceParcel).Variable;
+				}
+			}
+
+			// 0 Conventional auotos
+
+			var alternative = choiceProbabilityCalculator.GetAlternative(0, true, choice == 0);
+			alternative.Choice = 0;
+			//utility is 0
+
+			// 1 AVs
+
+			var lowIncome = household.Income < 300000 ? 1 : 0;
+			var highIncome = household.Income > 900000 ? 1 : 0;
+
+			alternative = choiceProbabilityCalculator.GetAlternative(1, true, choice == 1);
+			alternative.Choice = 1;
+
+			alternative.AddUtilityTerm(100, Global.Configuration.AV_AutoTypeConstant);
+			alternative.AddUtilityTerm(100, Global.Configuration.AV_HHIncomeUnder50KCoefficient * lowIncome);
+			alternative.AddUtilityTerm(100, Global.Configuration.AV_HHIncomeOver100KCoefficient * highIncome);
+			alternative.AddUtilityTerm(100, Global.Configuration.AV_HHHeadUnder35Coefficient * (ageOfHouseholdHead < 35).ToFlag());
+			alternative.AddUtilityTerm(100, Global.Configuration.AV_HHHeadOver65Coefficient * (ageOfHouseholdHead >= 65).ToFlag());
+			alternative.AddUtilityTerm(100, Global.Configuration.AV_CoefficientPerHourCommuteTime * (totalCommuteTime / 60.0));
+
+			// 2+ not available
+
+			alternative = choiceProbabilityCalculator.GetAlternative(2, false, choice == 2);
+			alternative.Choice = 2;
 		}
 	}
 }

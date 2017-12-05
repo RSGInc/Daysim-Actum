@@ -901,6 +901,7 @@ namespace Daysim.ChoiceModels.Actum.Models {
 						true,
 						1,
 						transitPassOwnership,
+						false,
 						transitDiscountFraction,
 						false,
 						mode);

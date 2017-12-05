@@ -109,6 +109,7 @@ namespace Daysim.ChoiceModels.Actum.Models {
 						true,
 						1,
 						0,
+						false,
 						0.0,
 						false,
 						Global.Settings.Modes.Transit);
@@ -131,7 +132,8 @@ namespace Daysim.ChoiceModels.Actum.Models {
                         true,
                         1,
 								1,
-                        1.0,
+                        false,
+								1.0,
                         false,
                         Global.Settings.Modes.Transit);
 
@@ -159,6 +161,7 @@ namespace Daysim.ChoiceModels.Actum.Models {
 						true,
 						1,
 						1,
+						false,
 						1.0,
 						false,
 						Global.Settings.Modes.Transit);

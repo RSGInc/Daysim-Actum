@@ -16,10 +16,8 @@ using Daysim.PathTypeModels;
 using HouseholdDayWrapper = Daysim.DomainModels.Default.Wrappers.HouseholdDayWrapper;
 using TripWrapper = Daysim.DomainModels.Default.Wrappers.TripWrapper;
 
-namespace Daysim.ChoiceModels.Actum.Models
-{
-	public class TripModeModel : ChoiceModel
-	{
+namespace Daysim.ChoiceModels.Actum.Models {
+	public class TripModeModel : ChoiceModel {
 		private const string CHOICE_MODEL_NAME = "ActumTripModeModel";
 		private const int MAX_PARAMETER = 199;
 
@@ -44,10 +42,10 @@ namespace Daysim.ChoiceModels.Actum.Models
 
 		// GVs Tree Logit uncomment this
 		// 1 works: bike, walk and PT in one and all 3 car modes in one. Theta is estimated to 0.33 and significant
-		private readonly int[] _nestedAlternativeIds = new[] {0, 19, 19, 20, 20, 20, 19, 0, 0};
-		private readonly int[] _nestedAlternativeIndexes = new[] {0, 1, 1, 2, 2, 2, 1, 0, 0};
-		
-        // 2 works: bike&walk in one, PT alone, CD1 (SOV) alone, and 2 car-Pass modes in one. Theta is estimated to 0.93 and significant
+		private readonly int[] _nestedAlternativeIds = new[] { 0, 19, 19, 20, 20, 20, 19, 0, 0, 0, 0, 0, 0, 0, 20 };
+		private readonly int[] _nestedAlternativeIndexes = new[] { 0, 1, 1, 2, 2, 2, 1, 0, 0, 0, 0, 0, 0, 0, 2 };
+
+		// 2 works: bike&walk in one, PT alone, CD1 (SOV) alone, and 2 car-Pass modes in one. Theta is estimated to 0.93 and significant
 		// Structure-1 works much better than Structure-2
 		//private readonly int[] _nestedAlternativeIds = new[] { 0, 19, 19, 21, 20, 20, 22, 0, 0 };
 		//private readonly int[] _nestedAlternativeIndexes = new[] { 0, 1, 1, 0, 2, 2, 0, 0, 0 };
@@ -63,31 +61,25 @@ namespace Daysim.ChoiceModels.Actum.Models
 		//private readonly int[] _nestedAlternativeIds = new[] { 0, 19, 19, 21, 21, 19, 19, 0, 0 };
 		//private readonly int[] _nestedAlternativeIndexes = new[] { 0, 1, 1, 2, 2, 1, 1, 0, 0 };
 
-		public override void RunInitialize(ICoefficientsReader reader = null)
-		{
+		public override void RunInitialize(ICoefficientsReader reader = null) {
 			Initialize(CHOICE_MODEL_NAME, Global.Configuration.TripModeModelCoefficients, Global.Settings.Modes.TotalModes,
-			           TOTAL_NESTED_ALTERNATIVES, TOTAL_LEVELS, MAX_PARAMETER);
+						  TOTAL_NESTED_ALTERNATIVES, TOTAL_LEVELS, MAX_PARAMETER);
 		}
 
-		public void Run(HouseholdDayWrapper householdDay, TripWrapper trip)
-		{
-			if (trip == null)
-			{
+		public void Run(HouseholdDayWrapper householdDay, TripWrapper trip) {
+			if (trip == null) {
 				throw new ArgumentNullException("trip");
 			}
 
 			if (householdDay.Household.Id == 80073 && trip.Day == 1 && trip.Person.Sequence == 1
-			    && trip.Tour.Sequence == 2 && trip.Direction == 1 && trip.Sequence == 1)
-			{
+				 && trip.Tour.Sequence == 2 && trip.Direction == 1 && trip.Sequence == 1) {
 				bool testbreak = true;
 			}
 
-			trip.PersonDay.ResetRandom(40*(2*trip.Tour.Sequence - 1 + trip.Direction - 1) + 40 + trip.Sequence - 1);
+			trip.PersonDay.ResetRandom(40 * (2 * trip.Tour.Sequence - 1 + trip.Direction - 1) + 40 + trip.Sequence - 1);
 
-			if (Global.Configuration.IsInEstimationMode)
-			{
-				if (Global.Configuration.EstimationModel != CHOICE_MODEL_NAME)
-				{
+			if (Global.Configuration.IsInEstimationMode) {
+				if (Global.Configuration.EstimationModel != CHOICE_MODEL_NAME) {
 					return;
 				}
 			}
@@ -109,10 +101,9 @@ namespace Daysim.ChoiceModels.Actum.Models
 
 			var departureTime = trip.IsHalfTourFromOrigin ? trip.LatestDepartureTime : trip.EarliestDepartureTime;
 
-			if (departureTime < 1)
-			{
+			if (departureTime < 1) {
 				Global.PrintFile.WriteLine("From origin / latest / earliest  {0} {1} {2}", trip.IsHalfTourFromOrigin,
-				                           trip.LatestDepartureTime, trip.EarliestDepartureTime);
+													trip.LatestDepartureTime, trip.EarliestDepartureTime);
 				if (!Global.Configuration.IsInEstimationMode) {
 					trip.PersonDay.IsValid = false;
 					householdDay.IsValid = false;
@@ -120,11 +111,9 @@ namespace Daysim.ChoiceModels.Actum.Models
 				return;
 			}
 
-			if (_helpers[ParallelUtility.GetBatchFromThreadId()].ModelIsInEstimationMode)
-			{
+			if (_helpers[ParallelUtility.GetBatchFromThreadId()].ModelIsInEstimationMode) {
 				if (destinationParcel == null || originParcel == null || trip.Mode <= Global.Settings.Modes.None ||
-				    trip.Mode > Global.Settings.Modes.Transit)
-				{
+					 trip.Mode > Global.Settings.Modes.Transit) {
 					return;
 				}
 
@@ -141,6 +130,7 @@ namespace Daysim.ChoiceModels.Actum.Models
 						trip.Person.IsDrivingAge,
 						trip.Household.VehiclesAvailable,
 						trip.Person.TransitPassOwnership,
+						trip.Household.OwnsAutomatedVehicles > 0,
 						trip.Person.GetTransitFareDiscountFraction(),
 						false);
 
@@ -159,8 +149,7 @@ namespace Daysim.ChoiceModels.Actum.Models
 
 				choiceProbabilityCalculator.WriteObservation();
 			}
-			else
-			{
+			else {
 				IEnumerable<dynamic> pathTypeModels =
 					PathTypeModelFactory.Model.RunAll(
 						trip.Household.RandomUtility,
@@ -174,6 +163,7 @@ namespace Daysim.ChoiceModels.Actum.Models
 						trip.Person.IsDrivingAge,
 						trip.Household.VehiclesAvailable,
 						trip.Person.TransitPassOwnership,
+						trip.Household.OwnsAutomatedVehicles > 0,
 						trip.Person.GetTransitFareDiscountFraction(),
 						false);
 
@@ -181,12 +171,10 @@ namespace Daysim.ChoiceModels.Actum.Models
 
 				var chosenAlternative = choiceProbabilityCalculator.SimulateChoice(trip.Household.RandomUtility);
 
-				if (chosenAlternative == null)
-				{
-					Global.PrintFile.WriteNoAlternativesAvailableWarning(CHOICE_MODEL_NAME, "Run", 100*trip.Tour.DestinationPurpose + trip.Tour.Mode);
+				if (chosenAlternative == null) {
+					Global.PrintFile.WriteNoAlternativesAvailableWarning(CHOICE_MODEL_NAME, "Run", 100 * trip.Tour.DestinationPurpose + trip.Tour.Mode);
 					trip.Mode = Global.Settings.Modes.Hov3;
-					if (!Global.Configuration.IsInEstimationMode)
-					{
+					if (!Global.Configuration.IsInEstimationMode) {
 						trip.PersonDay.IsValid = false;
 					}
 					return;
@@ -195,24 +183,22 @@ namespace Daysim.ChoiceModels.Actum.Models
 				var choice = (int) chosenAlternative.Choice;
 
 				trip.Mode = choice;
-				if (choice == Global.Settings.Modes.SchoolBus)
-				{
+				if (choice == Global.Settings.Modes.SchoolBus || choice == Global.Settings.Modes.PaidRideShare) {
 					trip.PathType = 0;
 				}
 
-					//else if (Global.Configuration.TestEstimationModelInApplicationMode)
-					//{
-					//    Global.Configuration.IsInEstimationMode = false;
-					//
-					//    RunModel(choiceProbabilityCalculator, trip, pathTypeModels, originParcel, destinationParcel);
-					//
-					//    var simulatedChoice = choiceProbabilityCalculator.SimulateChoice(householdDay.Household.RandomUtility, householdDay.Household.Id, householdDay.PrimaryPriorityTimeFlag);
-					//
-					//    Global.Configuration.IsInEstimationMode = true;
-					//}
+				//else if (Global.Configuration.TestEstimationModelInApplicationMode)
+				//{
+				//    Global.Configuration.IsInEstimationMode = false;
+				//
+				//    RunModel(choiceProbabilityCalculator, trip, pathTypeModels, originParcel, destinationParcel);
+				//
+				//    var simulatedChoice = choiceProbabilityCalculator.SimulateChoice(householdDay.Household.RandomUtility, householdDay.Household.Id, householdDay.PrimaryPriorityTimeFlag);
+				//
+				//    Global.Configuration.IsInEstimationMode = true;
+				//}
 
-				else
-				{
+				else {
 					var chosenPathType = pathTypeModels.First(x => x.Mode == choice);
 					trip.PathType = chosenPathType.PathType;
 				}
@@ -220,12 +206,11 @@ namespace Daysim.ChoiceModels.Actum.Models
 		}
 
 		private void RunModel(ChoiceProbabilityCalculator choiceProbabilityCalculator, TripWrapper trip,
-		                      IEnumerable<dynamic> pathTypeModels, IParcelWrapper originParcel,
-		                      IParcelWrapper destinationParcel,
-		                      int choice = Constants.DEFAULT_VALUE)
-		{
+									 IEnumerable<dynamic> pathTypeModels, IParcelWrapper originParcel,
+									 IParcelWrapper destinationParcel,
+									 int choice = Constants.DEFAULT_VALUE) {
 
-	
+
 			var household = trip.Household;
 			var householdTotals = household.HouseholdTotals;
 			var person = trip.Person;
@@ -237,7 +222,7 @@ namespace Daysim.ChoiceModels.Actum.Models
 			var HHwithChildrenFlag = household.HasChildren.ToFlag();
 			var HHwithSmallChildrenFlag = household.HasChildrenUnder5.ToFlag();
 			var childrenAge5Through15 = householdTotals.ChildrenAge5Through15;
-            var HHwithLowIncomeFlag = (household.Income >= 300000 && household.Income < 600000).ToFlag();
+			var HHwithLowIncomeFlag = (household.Income >= 300000 && household.Income < 600000).ToFlag();
 			var HHwithMidleIncomeFlag = (household.Income >= 600000 && household.Income < 900000).ToFlag();
 			var HHwithHighIncomeFlag = (household.Income >= 900000).ToFlag();
 			var nonworkingAdults = householdTotals.NonworkingAdults;
@@ -262,6 +247,7 @@ namespace Daysim.ChoiceModels.Actum.Models
 			var CarDrivNotAloneFlag = tour.IsHov2Mode().ToFlag();
 			var CarPassengerFlag = tour.IsHov3Mode().ToFlag();
 			var transitTourFlag = tour.IsTransitMode().ToFlag();
+			var paidRideShareTourFlag = tour.IsPaidRideShareMode().ToFlag();
 
 			var homeBasedWorkTourFlag = (tour.IsHomeBasedTour && tour.IsWorkPurpose()).ToFlag();
 			var homeBasedSchoolTourFlag = (tour.IsHomeBasedTour && tour.IsSchoolPurpose()).ToFlag();
@@ -274,13 +260,13 @@ namespace Daysim.ChoiceModels.Actum.Models
 
 			var jointTourFlag = (tour.JointTourSequence > 0) ? 1 : 0;
 			var partialHalfTourFlag = (trip.IsHalfTourFromOrigin
-				                           ? tour.PartialHalfTour1Sequence > 0
-				                           : tour.PartialHalfTour2Sequence > 0)
-				                          ? 1
-				                          : 0;
+													? tour.PartialHalfTour1Sequence > 0
+													: tour.PartialHalfTour2Sequence > 0)
+												  ? 1
+												  : 0;
 			var fullHalfTourFlag = (trip.IsHalfTourFromOrigin ? tour.FullHalfTour1Sequence > 0 : tour.FullHalfTour2Sequence > 0)
-				                       ? 1
-				                       : 0;
+											  ? 1
+											  : 0;
 
 
 			// trip inputs
@@ -321,10 +307,10 @@ namespace Daysim.ChoiceModels.Actum.Models
 			var originIntersectionDensity = originParcel.NetIntersectionDensity1();
 			var destinationParkingCost = destinationParcel.ParkingCostBuffer1(2);
 			var amPeriodFlag = departureTime.IsLeftExclusiveBetween(Global.Settings.Times.SixAM, Global.Settings.Times.NineAM).ToFlag();
-				//GV changed to 6-9 am
+			//GV changed to 6-9 am
 			var middayPeriodFlag = departureTime.IsLeftExclusiveBetween(Global.Settings.Times.NineAM, Global.Settings.Times.ThreePM).ToFlag();
 			var pmPeriodFlag = departureTime.IsLeftExclusiveBetween(Global.Settings.Times.ThreePM, Global.Settings.Times.SixPM).ToFlag();
-				//GV changed to 3-6 pm
+			//GV changed to 3-6 pm
 			var eveningPeriodFlag = (departureTime > Global.Settings.Times.SixPM).ToFlag(); //GV changed to 6 pm
 
 			// availability
@@ -332,15 +318,12 @@ namespace Daysim.ChoiceModels.Actum.Models
 
 			var isLastTripInTour = (!trip.IsHalfTourFromOrigin && halfTour.SimulatedTrips >= 1 && trip.IsToTourOrigin);
 			var frequencyPreviousTripModeIsTourMode = 0;
-			if (trip.IsHalfTourFromOrigin)
-			{
+			if (trip.IsHalfTourFromOrigin) {
 				frequencyPreviousTripModeIsTourMode +=
 					tour.HalfTourFromOrigin.Trips.Where(x => x.Sequence < trip.Sequence).Count(x => tour.Mode == x.Mode);
 			}
-			else
-			{
-				if (tour.HalfTourFromOrigin != null)
-				{
+			else {
+				if (tour.HalfTourFromOrigin != null) {
 					frequencyPreviousTripModeIsTourMode +=
 						tour.HalfTourFromOrigin.Trips.Where(x => x.Sequence > 0).Count(x => tour.Mode == x.Mode);
 				}
@@ -356,20 +339,16 @@ namespace Daysim.ChoiceModels.Actum.Models
 				tripModeAvailable[Global.Settings.Modes.HovPassenger] = !tripModeAvailable[Global.Settings.Modes.Sov];
 			}
 			//// if the last trip of the tour and tour mode not yet used, only the tour mode is available
-			else if (isLastTripInTour && frequencyPreviousTripModeIsTourMode == 0)
-			{
+			else if (isLastTripInTour && frequencyPreviousTripModeIsTourMode == 0) {
 				tripModeAvailable[tour.Mode] = true;
 			}
-			else
-			{
+			else {
 				// set availability based on tour mode
-				for (var mode = Global.Settings.Modes.Walk; mode <= tour.Mode; mode++)
-				{
+				for (var mode = Global.Settings.Modes.Walk; mode <= tour.Mode; mode++) {
 					tripModeAvailable[mode] = true;
 				}
 			}
-			if (person.Age < 18)
-			{
+			if (person.Age < 18) {
 				tripModeAvailable[Global.Settings.Modes.Sov] = false;
 				tripModeAvailable[Global.Settings.Modes.HovDriver] = false;
 			}
@@ -406,13 +385,12 @@ namespace Daysim.ChoiceModels.Actum.Models
 
 			ChoiceProbabilityCalculator.Alternative alternative;
 
-			foreach (var pathTypeModel in pathTypeModels)
-			{
+			foreach (var pathTypeModel in pathTypeModels) {
 				var mode = pathTypeModel.Mode;
 				var available = pathTypeModel.Available && tripModeAvailable[mode]
-				                && (trip.IsHalfTourFromOrigin
-					                    ? trip.LatestDepartureTime - pathTypeModel.PathTime >= trip.ArrivalTimeLimit
-					                    : trip.EarliestDepartureTime + pathTypeModel.PathTime <= trip.ArrivalTimeLimit);
+									 && (trip.IsHalfTourFromOrigin
+											  ? trip.LatestDepartureTime - pathTypeModel.PathTime >= trip.ArrivalTimeLimit
+											  : trip.EarliestDepartureTime + pathTypeModel.PathTime <= trip.ArrivalTimeLimit);
 				var generalizedTimeLogsum = pathTypeModel.GeneralizedTimeLogsum;
 
 				alternative = choiceProbabilityCalculator.GetAlternative(mode - 1, available, choice == mode);
@@ -421,19 +399,18 @@ namespace Daysim.ChoiceModels.Actum.Models
 				// GV for tree Logit uncomment this
 				alternative.AddNestedAlternative(_nestedAlternativeIds[mode], _nestedAlternativeIndexes[mode], THETA_PARAMETER);
 
-				if (!available)
-				{
+				if (!available) {
 					continue;
 				}
 
-				alternative.AddUtilityTerm(2, generalizedTimeLogsum*tour.TimeCoefficient);
+				alternative.AddUtilityTerm(2, generalizedTimeLogsum * tour.TimeCoefficient);
 
 				if (mode == Global.Settings.Modes.Transit) {
 					alternative.AddUtilityTerm(20, 1);
 					alternative.AddUtilityTerm(22, carsLessThanDriversFlag);
 
 					//GV: income is not sign. 22. june 2016
-                    //alternative.AddUtilityTerm(54, HHwithLowIncomeFlag);
+					//alternative.AddUtilityTerm(54, HHwithLowIncomeFlag);
 					//alternative.AddUtilityTerm(55, HHwithMidleIncomeFlag);
 					//alternative.AddUtilityTerm(56, HHwithHighIncomeFlag);
 
@@ -555,7 +532,7 @@ namespace Daysim.ChoiceModels.Actum.Models
 					alternative.AddUtilityTerm(104, (bikeTourFlag * firstTripOnFirstHalfFlag));
 					alternative.AddUtilityTerm(105, (bikeTourFlag * firstTripOnSecondHalfFlag));
 					alternative.AddUtilityTerm(106, (bikeTourFlag * lastTripOnFirstHalfFlag));
-					alternative.AddUtilityTerm(107, (bikeTourFlag * lastTripOnSecondHalfFlag)); 
+					alternative.AddUtilityTerm(107, (bikeTourFlag * lastTripOnSecondHalfFlag));
 
 					alternative.AddUtilityTerm(127, transitTourFlag);
 					alternative.AddUtilityTerm(130, CarDrivNotAloneFlag);
@@ -587,6 +564,29 @@ namespace Daysim.ChoiceModels.Actum.Models
 
 					alternative.AddUtilityTerm(187, jointTourFlag);
 					alternative.AddUtilityTerm(188, fullHalfTourFlag + partialHalfTourFlag);
+				}
+				else if (mode == Global.Settings.Modes.PaidRideShare) {
+
+                    var modeConstant = Global.Configuration.AV_PaidRideShareModeUsesAVs
+                     ? Global.Configuration.AV_PaidRideShare_ModeConstant
+                     + Global.Configuration.AV_PaidRideShare_DensityCoefficient * Math.Min(originParcel.HouseholdsBuffer2 + originParcel.StudentsUniversityBuffer2 + originParcel.EmploymentTotalBuffer2, 6000)
+                     + Global.Configuration.AV_PaidRideShare_AVOwnerCoefficient * (household.OwnsAutomatedVehicles > 0).ToFlag()
+                     : Global.Configuration.PaidRideShare_ModeConstant
+                     + Global.Configuration.PaidRideShare_DensityCoefficient * Math.Min(originParcel.HouseholdsBuffer2 + originParcel.StudentsUniversityBuffer2 + originParcel.EmploymentTotalBuffer2, 6000);
+
+                    alternative.AddUtilityTerm(80, modeConstant);
+                    alternative.AddUtilityTerm(80, Global.Configuration.PaidRideShare_Age26to35Coefficient * tour.Person.AgeIsBetween26And35.ToFlag());
+                    alternative.AddUtilityTerm(80, Global.Configuration.PaidRideShare_Age18to25Coefficient * tour.Person.AgeIsBetween18And25.ToFlag());
+                    alternative.AddUtilityTerm(80, Global.Configuration.PaidRideShare_AgeOver65Coefficient * (tour.Person.Age >= 65).ToFlag());
+
+					alternative.AddUtilityTerm(100, paidRideShareTourFlag);
+					alternative.AddUtilityTerm(102, (paidRideShareTourFlag * onlyTripOnFirstHalfFlag));
+					alternative.AddUtilityTerm(103, (paidRideShareTourFlag * onlyTripOnSecondHalfFlag));
+					alternative.AddUtilityTerm(104, (paidRideShareTourFlag * firstTripOnFirstHalfFlag));
+					alternative.AddUtilityTerm(105, (paidRideShareTourFlag * firstTripOnSecondHalfFlag));
+					alternative.AddUtilityTerm(106, (paidRideShareTourFlag * lastTripOnFirstHalfFlag));
+					alternative.AddUtilityTerm(107, (paidRideShareTourFlag * lastTripOnSecondHalfFlag));
+
 				}
 			}
 		}

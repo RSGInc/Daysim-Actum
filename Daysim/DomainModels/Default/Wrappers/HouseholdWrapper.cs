@@ -214,11 +214,20 @@ namespace Daysim.DomainModels.Default.Wrappers {
 		}
 
 
-		#endregion
+        #endregion
 
-		#region flags/choice model/etc. properties
+        #region flags/choice model/etc. properties
 
-		public bool IsOnePersonHousehold { get; set; }
+        //use the Residence data field for this
+        public int OwnsAutomatedVehicles
+        {
+            get { return _household.ResidenceType; }
+            set { _household.ResidenceType = value; }
+        }
+
+        public int ResidenceBuffer2Density { get; set; }
+
+        public bool IsOnePersonHousehold { get; set; }
 
 		public bool IsTwoPersonHousehold { get; set; }
 
@@ -372,9 +381,11 @@ namespace Daysim.DomainModels.Default.Wrappers {
 
 			SetExpansionFactor();
 
-			// flags/choice model/etc. properties
+            // flags/choice model/etc. properties
 
-			IsOnePersonHousehold = Size == 1;
+            ResidenceBuffer2Density = (int)Math.Round(ResidenceParcel.EmploymentTotalBuffer2 + ResidenceParcel.HouseholdsBuffer2 + ResidenceParcel.StudentsUniversityBuffer2, 0);
+            if (Global.Configuration.WriteResidenceBufferDensityToOwnOrRent) { OwnOrRent = ResidenceBuffer2Density; }
+            IsOnePersonHousehold = Size == 1;
 			IsTwoPersonHousehold = Size == 2;
 			Has0To15KIncome = Income.IsRightExclusiveBetween(0, 15000);
 			Has0To25KIncome = Income.IsRightExclusiveBetween(0, 25000);

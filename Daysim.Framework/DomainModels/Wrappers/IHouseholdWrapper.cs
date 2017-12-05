@@ -21,11 +21,15 @@ namespace Daysim.Framework.DomainModels.Wrappers {
 
 		IParcelWrapper ResidenceParcel { get; set; }
 
-		#endregion
+        #endregion
 
-		#region flags/choice model/etc. properties
+        #region flags/choice model/etc. properties
 
-		bool IsOnePersonHousehold { get; set; }
+        int OwnsAutomatedVehicles { get; set; }
+
+        int ResidenceBuffer2Density { get; set; }
+
+        bool IsOnePersonHousehold { get; set; }
 
 		bool IsTwoPersonHousehold { get; set; }
 

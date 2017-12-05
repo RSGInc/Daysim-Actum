@@ -31,10 +31,10 @@ namespace Daysim.DomainModels.Default.Wrappers {
 			_trip = trip;
 
 			_exporter =
-				Global
-					.Kernel
-					.Get<IPersistenceFactory<ITrip>>()
-					.Exporter;
+				 Global
+					  .Kernel
+					  .Get<IPersistenceFactory<ITrip>>()
+					  .Exporter;
 
 			// relations properties
 
@@ -310,54 +310,54 @@ namespace Daysim.DomainModels.Default.Wrappers {
 
 		public virtual bool IsNoneOrHomePurposeByOrigin() {
 			var purpose =
-				IsHalfTourFromOrigin
-					? DestinationPurpose
-					: OriginPurpose;
+				 IsHalfTourFromOrigin
+					  ? DestinationPurpose
+					  : OriginPurpose;
 
 			return purpose == Global.Settings.Purposes.NoneOrHome;
 		}
 
 		public virtual bool IsWorkPurposeByOrigin() {
 			var purpose =
-				IsHalfTourFromOrigin
-					? DestinationPurpose
-					: OriginPurpose;
+				 IsHalfTourFromOrigin
+					  ? DestinationPurpose
+					  : OriginPurpose;
 
 			return purpose == Global.Settings.Purposes.Work;
 		}
 
 		public virtual bool IsEscortPurposeByOrigin() {
 			var purpose =
-				IsHalfTourFromOrigin
-					? DestinationPurpose
-					: OriginPurpose;
+				 IsHalfTourFromOrigin
+					  ? DestinationPurpose
+					  : OriginPurpose;
 
 			return purpose == Global.Settings.Purposes.Escort;
 		}
 
 		public virtual bool IsNoneOrHomePurposeByDestination() {
 			var purpose =
-				IsHalfTourFromOrigin
-					? OriginPurpose
-					: DestinationPurpose;
+				 IsHalfTourFromOrigin
+					  ? OriginPurpose
+					  : DestinationPurpose;
 
 			return purpose == Global.Settings.Purposes.NoneOrHome;
 		}
 
 		public virtual bool IsWorkPurposeByDestination() {
 			var purpose =
-				IsHalfTourFromOrigin
-					? OriginPurpose
-					: DestinationPurpose;
+				 IsHalfTourFromOrigin
+					  ? OriginPurpose
+					  : DestinationPurpose;
 
 			return purpose == Global.Settings.Purposes.Work;
 		}
 
 		public virtual bool IsEscortPurposeByDestination() {
 			var purpose =
-				IsHalfTourFromOrigin
-					? OriginPurpose
-					: DestinationPurpose;
+				 IsHalfTourFromOrigin
+					  ? OriginPurpose
+					  : DestinationPurpose;
 
 			return purpose == Global.Settings.Purposes.Escort;
 		}
@@ -493,16 +493,65 @@ namespace Daysim.DomainModels.Default.Wrappers {
 		}
 
 		public virtual void SetDriverOrPassenger(List<ITripWrapper> trips) {
-			if (Mode == Global.Settings.Modes.Sov || Mode == Global.Settings.Modes.HovDriver) {
+			if (Mode == Global.Settings.Modes.PaidRideShare) {
+				//set main and other passenger randomly by tour purpose to get right percentage of trips to assign to network
+				var randomNumber = Household.RandomUtility.Uniform01();
+				DriverType =
+					 (  Tour.DestinationPurpose == Global.Settings.Purposes.Work && randomNumber < 0.98
+					 || Tour.DestinationPurpose == Global.Settings.Purposes.Business && randomNumber < 0.8
+					 || Tour.DestinationPurpose == Global.Settings.Purposes.School && randomNumber < 0.32
+					 || Tour.DestinationPurpose == Global.Settings.Purposes.Escort && randomNumber < 0.4
+					 || Tour.DestinationPurpose == Global.Settings.Purposes.PersonalBusiness && randomNumber < 0.70
+					 || Tour.DestinationPurpose == Global.Settings.Purposes.Shopping && randomNumber < 0.73
+					 || Tour.DestinationPurpose == Global.Settings.Purposes.Social && randomNumber < 0.62) ?
+					 Global.Settings.DriverTypes.Driver : Global.Settings.DriverTypes.Passenger;
+				if (Global.Configuration.AV_PaidRideShareModeUsesAVs) {
+					DriverType = DriverType + 2; //two types of AV passengers so we know which trips to assign to network
+				}
+			}
+			else if (Mode == Global.Settings.Modes.Walk || Mode == Global.Settings.Modes.Bike || Mode == Global.Settings.Modes.Transit || Mode == Global.Settings.Modes.SchoolBus || Mode == Global.Settings.Modes.Other) {
+				DriverType = Global.Settings.DriverTypes.NotApplicable;
+			}
+			else if (Mode == Global.Settings.Modes.Sov || Mode == Global.Settings.Modes.HovDriver) {
 				DriverType = Global.Settings.DriverTypes.Driver;
 			}
 			else if (Mode == Global.Settings.Modes.HovPassenger) {
 				DriverType = Global.Settings.DriverTypes.Passenger;
 			}
-			else {
-				DriverType = Global.Settings.DriverTypes.NotApplicable;
+			if (Mode >= Global.Settings.Modes.Sov && Mode <= Global.Settings.Modes.HovPassenger && Global.Configuration.AV_IncludeAutoTypeChoice && Tour.Household.OwnsAutomatedVehicles > 0) {
+				DriverType = DriverType + 2; //two types of AV passengers so we know which trips to assign to network
 			}
 		}
+
+		//		public virtual void SetDriverOrPassenger(List<ITripWrapper> trips) {
+		//			if (Mode == Global.Settings.Modes.Sov || Mode == Global.Settings.Modes.HovDriver) {
+		//				DriverType = Global.Settings.DriverTypes.Driver;
+		//			}
+		//			else if (Mode == Global.Settings.Modes.HovPassenger) {
+		//				DriverType = Global.Settings.DriverTypes.Passenger;
+		//			}
+		//			else if (Mode == Global.Settings.Modes.PaidRideShare) {
+		//				//set main and other passenger randomly by tour purpose to get right percentage of trips to assign to network
+		//				var randomNumber = Household.RandomUtility.Uniform01();
+		//				DriverType =
+		//					 (Tour.DestinationPurpose == Global.Settings.Purposes.WorkBased && randomNumber < 0.75
+		//					 || Tour.DestinationPurpose == Global.Settings.Purposes.Work && randomNumber < 0.98
+		//					 || Tour.DestinationPurpose == Global.Settings.Purposes.School && randomNumber < 0.32
+		//					 || Tour.DestinationPurpose == Global.Settings.Purposes.Escort && randomNumber < 0.4
+		//					 || Tour.DestinationPurpose == Global.Settings.Purposes.PersonalBusiness && randomNumber < 0.70
+		//					 || Tour.DestinationPurpose == Global.Settings.Purposes.Shopping && randomNumber < 0.73
+		//					 || Tour.DestinationPurpose == Global.Settings.Purposes.Meal && randomNumber < 0.75
+		//					 || Tour.DestinationPurpose == Global.Settings.Purposes.Social && randomNumber < 0.62) ?
+		//					 Global.Settings.DriverTypes.Driver : Global.Settings.DriverTypes.Passenger;
+		//				if (Global.Configuration.AV_PaidRideShareModeUsesAVs) {
+		//					DriverType = DriverType + 2; //two types of AV passengers so we know which trips to assign to network
+		//				}
+		//			}
+		//
+		//			else {
+		//				DriverType = Global.Settings.DriverTypes.NotApplicable;
+		//			}
+		//		}
 
 
 		//		public virtual void SetDriverOrPassenger(List<ITripWrapper> trips) {
@@ -697,50 +746,50 @@ namespace Daysim.DomainModels.Default.Wrappers {
 				}
 
 				ArrivalTime =
-					IsHalfTourFromOrigin
-						? Math.Max(1, DepartureTime - duration)
-						: Math.Min(Global.Settings.Times.MinutesInADay, DepartureTime + duration);
+					 IsHalfTourFromOrigin
+						  ? Math.Max(1, DepartureTime - duration)
+						  : Math.Min(Global.Settings.Times.MinutesInADay, DepartureTime + duration);
 
 				/* doesn't have much effect - turn off for now
-									 if (!Global.Configuration.AllowTripArrivalTimeOverlaps && timeWindow.IsBusy(ArrivalTime))   {
-										  // move entire trip up to 15 minutes later or earlier depending on half tour direction.  
-										  // Find the smallest shift that will make the arrival time a non-busy minute while still leaving 
-										  // a gap between the departure time and the arrival time at the trip origin (non-0 activity duration)
-										  //NOTE: This was copied over from the old version above.
-										  // This could possibly cause some inconsistencies for times for different people on joint tours, if it is done separately for each
-										  // (will work better if done before cloning....)
-										  const int moveLimit = 15;
+								if (!Global.Configuration.AllowTripArrivalTimeOverlaps && timeWindow.IsBusy(ArrivalTime))   {
+									 // move entire trip up to 15 minutes later or earlier depending on half tour direction.  
+									 // Find the smallest shift that will make the arrival time a non-busy minute while still leaving 
+									 // a gap between the departure time and the arrival time at the trip origin (non-0 activity duration)
+									 //NOTE: This was copied over from the old version above.
+									 // This could possibly cause some inconsistencies for times for different people on joint tours, if it is done separately for each
+									 // (will work better if done before cloning....)
+									 const int moveLimit = 15;
 
-										  if (IsHalfTourFromOrigin)     {
-												int originArrivalTime = Sequence == 1 ? Tour.DestinationDepartureTime : PreviousTrip.ArrivalTime;
-												int moveLater = 0;
-												do       {
-													 moveLater++;
-												} while (moveLater <= moveLimit && DepartureTime + moveLater < originArrivalTime && timeWindow.IsBusy(ArrivalTime + moveLater));
+									 if (IsHalfTourFromOrigin)     {
+										  int originArrivalTime = Sequence == 1 ? Tour.DestinationDepartureTime : PreviousTrip.ArrivalTime;
+										  int moveLater = 0;
+										  do       {
+												moveLater++;
+										  } while (moveLater <= moveLimit && DepartureTime + moveLater < originArrivalTime && timeWindow.IsBusy(ArrivalTime + moveLater));
 
-												if (!timeWindow.IsBusy(ArrivalTime + moveLater)) {
-													 ArrivalTime += moveLater;
-													 DepartureTime += moveLater;
-													 if (Sequence == 1) Tour.DestinationArrivalTime += moveLater;
-													 if (Global.Configuration.ReportInvalidPersonDays) Global.PrintFile.WriteLine("Tour {0}. Arrival time moved later by {1} minutes, New departure time {2}, Origin arrival {3}", Tour.Id, moveLater, DepartureTime, originArrivalTime);
-												}
-										  }
-										  else  {
-												int originArrivalTime = Sequence == 1 ? Tour.DestinationArrivalTime : PreviousTrip.ArrivalTime;
-												int moveEarlier = 0;
-												do   {
-													 moveEarlier++;
-												} while (moveEarlier <= moveLimit && DepartureTime - moveEarlier > originArrivalTime && timeWindow.IsBusy(ArrivalTime - moveEarlier));
-
-												if (!timeWindow.IsBusy(ArrivalTime - moveEarlier))   {
-													 ArrivalTime -= moveEarlier;
-													 DepartureTime -= moveEarlier;
-													 if (Sequence == 1) Tour.DestinationDepartureTime -= moveEarlier;
-													 if (Global.Configuration.ReportInvalidPersonDays) Global.PrintFile.WriteLine("Tour {0}. Arrival time moved earlier by {1} minutes, New departure time {2}, Origin arrival {3}", Tour.Id, moveEarlier, DepartureTime, originArrivalTime);
-												}
+										  if (!timeWindow.IsBusy(ArrivalTime + moveLater)) {
+												ArrivalTime += moveLater;
+												DepartureTime += moveLater;
+												if (Sequence == 1) Tour.DestinationArrivalTime += moveLater;
+												if (Global.Configuration.ReportInvalidPersonDays) Global.PrintFile.WriteLine("Tour {0}. Arrival time moved later by {1} minutes, New departure time {2}, Origin arrival {3}", Tour.Id, moveLater, DepartureTime, originArrivalTime);
 										  }
 									 }
-				*/
+									 else  {
+										  int originArrivalTime = Sequence == 1 ? Tour.DestinationArrivalTime : PreviousTrip.ArrivalTime;
+										  int moveEarlier = 0;
+										  do   {
+												moveEarlier++;
+										  } while (moveEarlier <= moveLimit && DepartureTime - moveEarlier > originArrivalTime && timeWindow.IsBusy(ArrivalTime - moveEarlier));
+
+										  if (!timeWindow.IsBusy(ArrivalTime - moveEarlier))   {
+												ArrivalTime -= moveEarlier;
+												DepartureTime -= moveEarlier;
+												if (Sequence == 1) Tour.DestinationDepartureTime -= moveEarlier;
+												if (Global.Configuration.ReportInvalidPersonDays) Global.PrintFile.WriteLine("Tour {0}. Arrival time moved earlier by {1} minutes, New departure time {2}, Origin arrival {3}", Tour.Id, moveEarlier, DepartureTime, originArrivalTime);
+										  }
+									 }
+								}
+		  */
 				//check again after possible adjustment
 
 				if (!Global.Configuration.AllowTripArrivalTimeOverlaps && timeWindow.IsBusy(ArrivalTime)) {
@@ -753,11 +802,11 @@ namespace Daysim.DomainModels.Default.Wrappers {
 					}
 				}
 				else //check if another trip needs to be scheduled and there only a few minutes left
-					if ((IsHalfTourFromOrigin && ArrivalTime < Tour.EarliestOriginDepartureTime + 3 && DestinationParcel != Tour.OriginParcel) || (!IsHalfTourFromOrigin && ArrivalTime > Tour.LatestOriginArrivalTime - 3 && DestinationParcel != Tour.OriginParcel)) {
-						if (!Global.Configuration.IsInEstimationMode) {
-							PersonDay.IsValid = false;
-						}
+					 if ((IsHalfTourFromOrigin && ArrivalTime < Tour.EarliestOriginDepartureTime + 3 && DestinationParcel != Tour.OriginParcel) || (!IsHalfTourFromOrigin && ArrivalTime > Tour.LatestOriginArrivalTime - 3 && DestinationParcel != Tour.OriginParcel)) {
+					if (!Global.Configuration.IsInEstimationMode) {
+						PersonDay.IsValid = false;
 					}
+				}
 
 				if (Global.Configuration.TraceModelResultValidity) {
 					if (PersonDay.HouseholdDay.AttemptedSimulations >= Global.Configuration.InvalidAttemptsBeforeTrace) {
@@ -782,18 +831,18 @@ namespace Daysim.DomainModels.Default.Wrappers {
 
 			//adjust the time window for busy minutes at the stop origin and during the trip - done also in estimation mode
 			var earliestBusyMinute =
-				IsHalfTourFromOrigin
-					? ArrivalTime
-					: Sequence == 1
-						? Tour.DestinationDepartureTime
-						: GetPreviousTrip().ArrivalTime;
+				 IsHalfTourFromOrigin
+					  ? ArrivalTime
+					  : Sequence == 1
+							? Tour.DestinationDepartureTime
+							: GetPreviousTrip().ArrivalTime;
 
 			var latestBusyMinute =
-				!IsHalfTourFromOrigin
-					? ArrivalTime
-					: Sequence == 1
-						? Tour.DestinationArrivalTime
-						: GetPreviousTrip().ArrivalTime;
+				 !IsHalfTourFromOrigin
+					  ? ArrivalTime
+					  : Sequence == 1
+							? Tour.DestinationArrivalTime
+							: GetPreviousTrip().ArrivalTime;
 
 			timeWindow.SetBusyMinutes(earliestBusyMinute, latestBusyMinute + 1);
 
@@ -874,17 +923,23 @@ namespace Daysim.DomainModels.Default.Wrappers {
 		//JLB 20160323
 		public virtual void SetTripValueOfTime() {
 			var costDivisor =
-				Mode == Global.Settings.Modes.HovDriver && (Tour.DestinationPurpose == Global.Settings.Purposes.Work || Tour.DestinationPurpose == Global.Settings.Purposes.Business)
-					? Global.Configuration.Coefficients_HOV2CostDivisor_Work
-					: Mode == Global.Settings.Modes.HovDriver && Tour.DestinationPurpose != Global.Settings.Purposes.Work && Tour.DestinationPurpose != Global.Settings.Purposes.Business
-						? Global.Configuration.Coefficients_HOV2CostDivisor_Other
-						: Mode == Global.Settings.Modes.HovPassenger && (Tour.DestinationPurpose == Global.Settings.Purposes.Work || Tour.DestinationPurpose == Global.Settings.Purposes.Business)
-							? Global.Configuration.Coefficients_HOV3CostDivisor_Work
-							: Mode == Global.Settings.Modes.HovPassenger && Tour.DestinationPurpose != Global.Settings.Purposes.Work && Tour.DestinationPurpose != Global.Settings.Purposes.Business
-								? Global.Configuration.Coefficients_HOV3CostDivisor_Other
-								: 1.0;
+				 Mode == Global.Settings.Modes.HovDriver && (Tour.DestinationPurpose == Global.Settings.Purposes.Work || Tour.DestinationPurpose == Global.Settings.Purposes.Business)
+					  ? Global.Configuration.Coefficients_HOV2CostDivisor_Work
+					  : Mode == Global.Settings.Modes.HovDriver && Tour.DestinationPurpose != Global.Settings.Purposes.Work && Tour.DestinationPurpose != Global.Settings.Purposes.Business
+							? Global.Configuration.Coefficients_HOV2CostDivisor_Other
+							: Mode == Global.Settings.Modes.HovPassenger && (Tour.DestinationPurpose == Global.Settings.Purposes.Work || Tour.DestinationPurpose == Global.Settings.Purposes.Business)
+								 ? Global.Configuration.Coefficients_HOV3CostDivisor_Work
+								 : Mode == Global.Settings.Modes.HovPassenger && Tour.DestinationPurpose != Global.Settings.Purposes.Work && Tour.DestinationPurpose != Global.Settings.Purposes.Business
+									  ? Global.Configuration.Coefficients_HOV3CostDivisor_Other
+									  : 1.0;
 
-			ValueOfTime = (Tour.TimeCoefficient * 60) / (Tour.CostCoefficient / costDivisor);
+			//			ValueOfTime = (Tour.TimeCoefficient * 60) / (Tour.CostCoefficient / costDivisor);
+
+			var AVFactor = ((Global.Configuration.AV_IncludeAutoTypeChoice && Household.OwnsAutomatedVehicles > 0 && Mode >= Global.Settings.Modes.Sov && Mode <= Global.Settings.Modes.Hov3)
+							 || (Global.Configuration.AV_PaidRideShareModeUsesAVs && Mode == Global.Settings.Modes.PaidRideShare))
+							 ? (1.0 - Global.Configuration.AV_InVehicleTimeCoefficientDiscountFactor) : 1.0;
+
+			ValueOfTime = (Tour.TimeCoefficient * 60) * AVFactor / (Tour.CostCoefficient / costDivisor);
 		}
 
 		//		public virtual void SetTripValueOfTime() {
@@ -940,16 +995,16 @@ namespace Daysim.DomainModels.Default.Wrappers {
 				if (time.Available) {
 
 					time.EarliestFeasibleDepatureTime = Math.Max(period.Start,
-							this.IsHalfTourFromOrigin
-						//JLB 20130723 replace next line
-						//? trip.ArrivalTimeLimit + - (int) (time.ModeLOS.PathTime + 0.5)
-							? this.ArrivalTimeLimit + (int) (travelTime + 0.5)
-							: this.EarliestDepartureTime);
+							  this.IsHalfTourFromOrigin
+							  //JLB 20130723 replace next line
+							  //? trip.ArrivalTimeLimit + - (int) (time.ModeLOS.PathTime + 0.5)
+							  ? this.ArrivalTimeLimit + (int) (travelTime + 0.5)
+							  : this.EarliestDepartureTime);
 
 					time.LatestFeasibleDepartureTime = Math.Min(period.End,
-							this.IsHalfTourFromOrigin
-							? this.LatestDepartureTime
-							: this.ArrivalTimeLimit - (int) (travelTime + 0.5));
+							  this.IsHalfTourFromOrigin
+							  ? this.LatestDepartureTime
+							  : this.ArrivalTimeLimit - (int) (travelTime + 0.5));
 
 					time.Available = time.EarliestFeasibleDepatureTime < time.LatestFeasibleDepartureTime;
 				}
@@ -1013,50 +1068,50 @@ namespace Daysim.DomainModels.Default.Wrappers {
 				}
 
 				ArrivalTime =
-					IsHalfTourFromOrigin
-						? Math.Max(1, DepartureTime - duration)
-						: Math.Min(Global.Settings.Times.MinutesInADay, DepartureTime + duration);
+					 IsHalfTourFromOrigin
+						  ? Math.Max(1, DepartureTime - duration)
+						  : Math.Min(Global.Settings.Times.MinutesInADay, DepartureTime + duration);
 
 				/* doesn't have much effect - turn off for now
-									 if (!Global.Configuration.AllowTripArrivalTimeOverlaps && timeWindow.IsBusy(ArrivalTime))   {
-										  // move entire trip up to 15 minutes later or earlier depending on half tour direction.  
-										  // Find the smallest shift that will make the arrival time a non-busy minute while still leaving 
-										  // a gap between the departure time and the arrival time at the trip origin (non-0 activity duration)
-										  //NOTE: This was copied over from the old version above.
-										  // This could possibly cause some inconsistencies for times for different people on joint tours, if it is done separately for each
-										  // (will work better if done before cloning....)
-										  const int moveLimit = 15;
+								if (!Global.Configuration.AllowTripArrivalTimeOverlaps && timeWindow.IsBusy(ArrivalTime))   {
+									 // move entire trip up to 15 minutes later or earlier depending on half tour direction.  
+									 // Find the smallest shift that will make the arrival time a non-busy minute while still leaving 
+									 // a gap between the departure time and the arrival time at the trip origin (non-0 activity duration)
+									 //NOTE: This was copied over from the old version above.
+									 // This could possibly cause some inconsistencies for times for different people on joint tours, if it is done separately for each
+									 // (will work better if done before cloning....)
+									 const int moveLimit = 15;
 
-										  if (IsHalfTourFromOrigin)     {
-												int originArrivalTime = Sequence == 1 ? Tour.DestinationDepartureTime : PreviousTrip.ArrivalTime;
-												int moveLater = 0;
-												do       {
-													 moveLater++;
-												} while (moveLater <= moveLimit && DepartureTime + moveLater < originArrivalTime && timeWindow.IsBusy(ArrivalTime + moveLater));
+									 if (IsHalfTourFromOrigin)     {
+										  int originArrivalTime = Sequence == 1 ? Tour.DestinationDepartureTime : PreviousTrip.ArrivalTime;
+										  int moveLater = 0;
+										  do       {
+												moveLater++;
+										  } while (moveLater <= moveLimit && DepartureTime + moveLater < originArrivalTime && timeWindow.IsBusy(ArrivalTime + moveLater));
 
-												if (!timeWindow.IsBusy(ArrivalTime + moveLater)) {
-													 ArrivalTime += moveLater;
-													 DepartureTime += moveLater;
-													 if (Sequence == 1) Tour.DestinationArrivalTime += moveLater;
-													 if (Global.Configuration.ReportInvalidPersonDays) Global.PrintFile.WriteLine("Tour {0}. Arrival time moved later by {1} minutes, New departure time {2}, Origin arrival {3}", Tour.Id, moveLater, DepartureTime, originArrivalTime);
-												}
-										  }
-										  else  {
-												int originArrivalTime = Sequence == 1 ? Tour.DestinationArrivalTime : PreviousTrip.ArrivalTime;
-												int moveEarlier = 0;
-												do   {
-													 moveEarlier++;
-												} while (moveEarlier <= moveLimit && DepartureTime - moveEarlier > originArrivalTime && timeWindow.IsBusy(ArrivalTime - moveEarlier));
-
-												if (!timeWindow.IsBusy(ArrivalTime - moveEarlier))   {
-													 ArrivalTime -= moveEarlier;
-													 DepartureTime -= moveEarlier;
-													 if (Sequence == 1) Tour.DestinationDepartureTime -= moveEarlier;
-													 if (Global.Configuration.ReportInvalidPersonDays) Global.PrintFile.WriteLine("Tour {0}. Arrival time moved earlier by {1} minutes, New departure time {2}, Origin arrival {3}", Tour.Id, moveEarlier, DepartureTime, originArrivalTime);
-												}
+										  if (!timeWindow.IsBusy(ArrivalTime + moveLater)) {
+												ArrivalTime += moveLater;
+												DepartureTime += moveLater;
+												if (Sequence == 1) Tour.DestinationArrivalTime += moveLater;
+												if (Global.Configuration.ReportInvalidPersonDays) Global.PrintFile.WriteLine("Tour {0}. Arrival time moved later by {1} minutes, New departure time {2}, Origin arrival {3}", Tour.Id, moveLater, DepartureTime, originArrivalTime);
 										  }
 									 }
-				*/
+									 else  {
+										  int originArrivalTime = Sequence == 1 ? Tour.DestinationArrivalTime : PreviousTrip.ArrivalTime;
+										  int moveEarlier = 0;
+										  do   {
+												moveEarlier++;
+										  } while (moveEarlier <= moveLimit && DepartureTime - moveEarlier > originArrivalTime && timeWindow.IsBusy(ArrivalTime - moveEarlier));
+
+										  if (!timeWindow.IsBusy(ArrivalTime - moveEarlier))   {
+												ArrivalTime -= moveEarlier;
+												DepartureTime -= moveEarlier;
+												if (Sequence == 1) Tour.DestinationDepartureTime -= moveEarlier;
+												if (Global.Configuration.ReportInvalidPersonDays) Global.PrintFile.WriteLine("Tour {0}. Arrival time moved earlier by {1} minutes, New departure time {2}, Origin arrival {3}", Tour.Id, moveEarlier, DepartureTime, originArrivalTime);
+										  }
+									 }
+								}
+		  */
 				//check again after possible adjustment
 
 				if (!Global.Configuration.AllowTripArrivalTimeOverlaps && timeWindow.IsBusy(ArrivalTime)) {
@@ -1069,11 +1124,11 @@ namespace Daysim.DomainModels.Default.Wrappers {
 					}
 				}
 				else //check if another trip needs to be scheduled and there only a few minutes left
-					if ((IsHalfTourFromOrigin && ArrivalTime < Tour.EarliestOriginDepartureTime + 3 && DestinationParcel != Tour.OriginParcel) || (!IsHalfTourFromOrigin && ArrivalTime > Tour.LatestOriginArrivalTime - 3 && DestinationParcel != Tour.OriginParcel)) {
-						if (!Global.Configuration.IsInEstimationMode) {
-							PersonDay.IsValid = false;
-						}
+					 if ((IsHalfTourFromOrigin && ArrivalTime < Tour.EarliestOriginDepartureTime + 3 && DestinationParcel != Tour.OriginParcel) || (!IsHalfTourFromOrigin && ArrivalTime > Tour.LatestOriginArrivalTime - 3 && DestinationParcel != Tour.OriginParcel)) {
+					if (!Global.Configuration.IsInEstimationMode) {
+						PersonDay.IsValid = false;
 					}
+				}
 
 				if (Global.Configuration.TraceModelResultValidity) {
 					if (PersonDay.HouseholdDay.AttemptedSimulations >= Global.Configuration.InvalidAttemptsBeforeTrace) {
@@ -1098,18 +1153,18 @@ namespace Daysim.DomainModels.Default.Wrappers {
 
 			//adjust the time window for busy minutes at the stop origin and during the trip - done also in estimation mode
 			var earliestBusyMinute =
-				IsHalfTourFromOrigin
-					? ArrivalTime
-					: Sequence == 1
-						? Tour.DestinationDepartureTime
-						: GetPreviousTrip().ArrivalTime;
+				 IsHalfTourFromOrigin
+					  ? ArrivalTime
+					  : Sequence == 1
+							? Tour.DestinationDepartureTime
+							: GetPreviousTrip().ArrivalTime;
 
 			var latestBusyMinute =
-				!IsHalfTourFromOrigin
-					? ArrivalTime
-					: Sequence == 1
-						? Tour.DestinationArrivalTime
-						: GetPreviousTrip().ArrivalTime;
+				 !IsHalfTourFromOrigin
+					  ? ArrivalTime
+					  : Sequence == 1
+							? Tour.DestinationArrivalTime
+							: GetPreviousTrip().ArrivalTime;
 
 			timeWindow.SetBusyMinutes(earliestBusyMinute, latestBusyMinute + 1);
 
@@ -1138,35 +1193,35 @@ namespace Daysim.DomainModels.Default.Wrappers {
 
 		public static void Close() {
 			Global
-				.Kernel
-				.Get<IPersistenceFactory<ITrip>>()
-				.Close();
+				 .Kernel
+				 .Get<IPersistenceFactory<ITrip>>()
+				 .Close();
 		}
 
 		public override string ToString() {
 			var builder = new StringBuilder();
 
 			builder
-				.AppendLine(string.Format("Trip ID: {0}, Tour ID: {1}",
-					_trip.Id,
-					_trip.TourId));
+				 .AppendLine(string.Format("Trip ID: {0}, Tour ID: {1}",
+					  _trip.Id,
+					  _trip.TourId));
 
 			builder
-				.AppendLine(string.Format("Household ID: {0}, Person Sequence: {1}, Day: {2}, Tour Sequence: {3}, Half-tour: {4}, Sequence {5}",
-					_trip.HouseholdId,
-					_trip.PersonSequence,
-					_trip.Day,
-					_trip.TourSequence,
-					_trip.Direction,
-					_trip.Sequence));
+				 .AppendLine(string.Format("Household ID: {0}, Person Sequence: {1}, Day: {2}, Tour Sequence: {3}, Half-tour: {4}, Sequence {5}",
+					  _trip.HouseholdId,
+					  _trip.PersonSequence,
+					  _trip.Day,
+					  _trip.TourSequence,
+					  _trip.Direction,
+					  _trip.Sequence));
 
 			builder
-				.AppendLine(string.Format("Destination Parcel ID: {0}, Destination Zone Key: {1}, Destination Purpose: {2}, Mode: {3}, Departure Time: {4}",
-					_trip.DestinationParcelId,
-					_trip.DestinationZoneKey,
-					_trip.DestinationPurpose,
-					_trip.Mode,
-					_trip.DepartureTime));
+				 .AppendLine(string.Format("Destination Parcel ID: {0}, Destination Zone Key: {1}, Destination Purpose: {2}, Mode: {3}, Departure Time: {4}",
+					  _trip.DestinationParcelId,
+					  _trip.DestinationZoneKey,
+					  _trip.DestinationPurpose,
+					  _trip.Mode,
+					  _trip.DepartureTime));
 
 			return builder.ToString();
 		}
@@ -1209,24 +1264,24 @@ namespace Daysim.DomainModels.Default.Wrappers {
 				}
 				else {
 					var parkAndRideZoneId =
-						 ChoiceModelFactory
-						 .ParkAndRideNodeDao
-						 .Get(Tour.ParkAndRideNodeId)
-						 .ZoneId;
+						  ChoiceModelFactory
+						  .ParkAndRideNodeDao
+						  .Get(Tour.ParkAndRideNodeId)
+						  .ZoneId;
 
 					var origin = IsHalfTourFromOrigin ? parkAndRideZoneId : OriginParcel.ZoneId;
 					var destination = IsHalfTourFromOrigin ? OriginParcel.ZoneId : parkAndRideZoneId;
 
 					IEnumerable<dynamic> pathTypeModels =
-						 PathTypeModelFactory.Model
-						//20151117 JLB following line was before I made change for Actum under SVN repository 
-						//.Run(Household.RandomUtility, OriginParcel.ZoneId, parkAndRideZoneId, minute, 0, DestinationPurpose, costCoefficient, timeCoefficient, true, 1, Person.GetTransitFareDiscountFraction(), false, Mode);
-						//20171117 JLB following line was after I made change for Actum under SVN repository
-						//.Run(Household.RandomUtility, OriginParcel.ZoneId, parkAndRideZoneId, minute, 0, DestinationPurpose, costCoefficient, timeCoefficient, true, 1, Person.TransitPassOwnership, Person.GetTransitFareDiscountFraction(), false, Mode);
-						//20171117 JLB following line came from RSG Git repository when I was synching new Git Actum repository with RSG Git repository
-						//.Run(Household.RandomUtility, origin, destination, Tour.DestinationArrivalTime, Tour.DestinationDepartureTime, DestinationPurpose, costCoefficient, timeCoefficient, true, 1, Person.GetTransitFareDiscountFraction(), false, Global.Settings.Modes.ParkAndRide);
-						//20151117 JLB following line inserts my change for Actum into the line that came from the RSG Git repository
-						 .Run(Household.RandomUtility, origin, destination, Tour.DestinationArrivalTime, Tour.DestinationDepartureTime, DestinationPurpose, costCoefficient, timeCoefficient, true, 1, Person.TransitPassOwnership, Person.GetTransitFareDiscountFraction(), false, Global.Settings.Modes.ParkAndRide);
+						  PathTypeModelFactory.Model
+						  //20151117 JLB following line was before I made change for Actum under SVN repository 
+						  //.Run(Household.RandomUtility, OriginParcel.ZoneId, parkAndRideZoneId, minute, 0, DestinationPurpose, costCoefficient, timeCoefficient, true, 1, Person.GetTransitFareDiscountFraction(), false, Mode);
+						  //20171117 JLB following line was after I made change for Actum under SVN repository
+						  //.Run(Household.RandomUtility, OriginParcel.ZoneId, parkAndRideZoneId, minute, 0, DestinationPurpose, costCoefficient, timeCoefficient, true, 1, Person.TransitPassOwnership, Person.GetTransitFareDiscountFraction(), false, Mode);
+						  //20171117 JLB following line came from RSG Git repository when I was synching new Git Actum repository with RSG Git repository
+						  //.Run(Household.RandomUtility, origin, destination, Tour.DestinationArrivalTime, Tour.DestinationDepartureTime, DestinationPurpose, costCoefficient, timeCoefficient, true, 1, Person.GetTransitFareDiscountFraction(), false, Global.Settings.Modes.ParkAndRide);
+						  //20151117 JLB following line inserts my change for Actum into the line that came from the RSG Git repository
+						  .Run(Household.RandomUtility, origin, destination, Tour.DestinationArrivalTime, Tour.DestinationDepartureTime, DestinationPurpose, costCoefficient, timeCoefficient, true, 1, Person.TransitPassOwnership, Household.OwnsAutomatedVehicles > 0, Person.GetTransitFareDiscountFraction(), false, Global.Settings.Modes.ParkAndRide);
 
 					pathType = pathTypeModels.First();
 
@@ -1249,15 +1304,15 @@ namespace Daysim.DomainModels.Default.Wrappers {
 				var destination = IsHalfTourFromOrigin ? OriginParcel : DestinationParcel;
 
 				IEnumerable<dynamic> pathTypeModels =
-					 PathTypeModelFactory.Model
-					//20151117 JLB following line was before I made change for Actum under SVN repository 
-					//.Run(Household.RandomUtility, OriginParcel, DestinationParcel, minute, 0, DestinationPurpose, costCoefficient, timeCoefficient, true, 1, Person.GetTransitFareDiscountFraction(), false, useMode);
-					//20171117 JLB following line was after I made change for Actum under SVN repository
-					//.Run(Household.RandomUtility, OriginParcel, DestinationParcel, minute, 0, DestinationPurpose, costCoefficient, timeCoefficient, true, 1, Person.TransitPassOwnership, Person.GetTransitFareDiscountFraction(), false, useMode);
-					//20171117 JLB following line came from RSG Git repository when I was synching new Git Actum repository with RSG Git repository
-					//.Run(Household.RandomUtility, origin, destination, minute, 0, DestinationPurpose, costCoefficient, timeCoefficient, true, 1, Person.GetTransitFareDiscountFraction(), false, useMode);
-					//20151117 JLB following line inserts my change for Actum into the line that came from the RSG Git repository
-						  .Run(Household.RandomUtility, origin, destination, minute, 0, DestinationPurpose, costCoefficient, timeCoefficient, true, 1, Person.TransitPassOwnership, Person.GetTransitFareDiscountFraction(), false, useMode);
+					  PathTypeModelFactory.Model
+							 //20151117 JLB following line was before I made change for Actum under SVN repository 
+							 //.Run(Household.RandomUtility, OriginParcel, DestinationParcel, minute, 0, DestinationPurpose, costCoefficient, timeCoefficient, true, 1, Person.GetTransitFareDiscountFraction(), false, useMode);
+							 //20171117 JLB following line was after I made change for Actum under SVN repository
+							 //.Run(Household.RandomUtility, OriginParcel, DestinationParcel, minute, 0, DestinationPurpose, costCoefficient, timeCoefficient, true, 1, Person.TransitPassOwnership, Person.GetTransitFareDiscountFraction(), false, useMode);
+							 //20171117 JLB following line came from RSG Git repository when I was synching new Git Actum repository with RSG Git repository
+							 //.Run(Household.RandomUtility, origin, destination, minute, 0, DestinationPurpose, costCoefficient, timeCoefficient, true, 1, Person.GetTransitFareDiscountFraction(), false, useMode);
+							 //20151117 JLB following line inserts my change for Actum into the line that came from the RSG Git repository
+							 .Run(Household.RandomUtility, origin, destination, minute, 0, DestinationPurpose, costCoefficient, timeCoefficient, true, 1, Person.TransitPassOwnership, Household.OwnsAutomatedVehicles > 0, Person.GetTransitFareDiscountFraction(), false, useMode);
 				pathType = pathTypeModels.First();
 
 				modeImpedance.TravelTime = pathType.PathTime;
