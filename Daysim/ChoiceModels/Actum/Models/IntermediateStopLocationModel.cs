@@ -377,7 +377,7 @@ namespace Daysim.ChoiceModels.Actum.Models {
 						gtim2 = gd1Time2;
 					}
 				}
-				else if (tour.Mode == Global.Settings.Modes.Sov || tour.Mode == Global.Settings.Modes.ParkAndRide) {
+				else if (tour.Mode == Global.Settings.Modes.Sov || tour.Mode == Global.Settings.Modes.ParkAndRide || tour.Mode == Global.Settings.Modes.PaidRideShare) {
 					if (wdis1 < WTHRESH && wdis2 < WTHRESH && wdis1 > Constants.EPSILON && wdis2 > Constants.EPSILON) {
 						ttim1 = wtime1;
 						ttim2 = wtime2;
