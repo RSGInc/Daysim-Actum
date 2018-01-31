@@ -1900,7 +1900,7 @@ namespace Daysim.PathTypeModels {
 			//determine time weight
 			//extra time weight for driver and passenger
 			double inVehicleExtraTimeWeight;
-			if (skimMode == Global.Settings.Modes.HovPassenger) {
+			if (skimModeIn == Global.Settings.Modes.HovPassenger) {  //JLB 20180130 change from SkimMode so that PaidRideShare is not treated like HOVPassenger
 				inVehicleExtraTimeWeight = Global.Configuration.PathImpedance_InVehicleExtraTimeWeight_Passenger;
 			}
 			else {
@@ -1915,7 +1915,7 @@ namespace Daysim.PathTypeModels {
 			else if (_purpose == Global.Settings.Purposes.Business) {
 				aggregatePurpose = 2;
 			}
-			if (skimMode == Global.Settings.Modes.Sov) {
+			if (skimModeIn == Global.Settings.Modes.Sov) {  //JLB 20180130 change from SkimMode so that AV is not necessarily treated like HOVPassenger
 				if (aggregatePurpose == 1) {
 					inVehicleTimeWeight = Global.Configuration.PathImpedance_InVehicleTimeWeight_Commute_SOV;
 				}
@@ -1926,7 +1926,7 @@ namespace Daysim.PathTypeModels {
 					inVehicleTimeWeight = Global.Configuration.PathImpedance_InVehicleTimeWeight_Personal_SOV;
 				}
 			}
-			else if (skimMode == Global.Settings.Modes.HovDriver) {
+			else if (skimModeIn == Global.Settings.Modes.HovDriver) { //JLB 20180130 change from SkimMode so that AV is not necessarily treated like HOVPassenger
 				if (aggregatePurpose == 1) {
 					inVehicleTimeWeight = Global.Configuration.PathImpedance_InVehicleTimeWeight_Commute_HOVDriver;
 				}
@@ -1953,8 +1953,11 @@ namespace Daysim.PathTypeModels {
 			double gammaCost;
 			double distanceCoefficient;
 			double modeConstant;
-			if (skimMode == Global.Settings.Modes.HovPassenger && !Global.Configuration.HOVPassengersIncurCosts) {
+			if (skimModeIn == Global.Settings.Modes.HovPassenger && !Global.Configuration.HOVPassengersIncurCosts) { //JLB 20180130 change from SkimMode so that PaidRideShare is not treated like HOVPassenger
 				gammaCost = 0;
+			}
+			else if (skimModeIn == Global.Settings.Modes.PaidRideShare) {
+				gammaCost = GammaFunction(path.Cost, Global.Configuration.PaidRideShare_PathImpedance_Gamma_Cost);
 			}
 			else {
 				gammaCost = GammaFunction(path.Cost, Global.Configuration.PathImpedance_Gamma_Cost);

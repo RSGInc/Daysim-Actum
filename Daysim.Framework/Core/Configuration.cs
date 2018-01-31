@@ -603,25 +603,25 @@ namespace Daysim.Framework.Core {
 
 		[XmlAttribute]
 		public double PathImpedance_TransitSubwayTimeAdditiveWeight { get; set; }
-		
+
 		[XmlAttribute]
 		public double PathImpedance_TransitPATTimeAdditiveWeight { get; set; }
-		
+
 		[XmlAttribute]
 		public double PathImpedance_TransitTrolleyTimeAdditiveWeight { get; set; }
-		
+
 		[XmlAttribute]
 		public double PathImpedance_TransitFerryTimeAdditiveWeight { get; set; }
 
 		[XmlAttribute]
 		public double PathImpedance_TransitLightRailInVehicleTimeWeight { get; set; }
-		
+
 		[XmlAttribute]
 		public double PathImpedance_TransitPremiumBusInVehicleTimeWeight { get; set; }
-		
+
 		[XmlAttribute]
 		public double PathImpedance_TransitCommuterRailInVehicleTimeWeight { get; set; }
-		
+
 		[XmlAttribute]
 		public double PathImpedance_TransitFerryInVehicleTimeWeight { get; set; }
 
@@ -1340,7 +1340,7 @@ namespace Daysim.Framework.Core {
 
 		[XmlAttribute]
 		public bool DVRPC { get; set; }
-		
+
 		[XmlAttribute]
 		public bool Nashville { get; set; }
 
@@ -1393,99 +1393,103 @@ namespace Daysim.Framework.Core {
 		[XmlAttribute]
 		public double Policy_IncomeMultiplier { get; set; }
 
-        [XmlAttribute]
-        public double PaidRideShare_ModeConstant { get; set; }
+		[XmlAttribute]
+		public double PaidRideShare_ModeConstant { get; set; }
 
-        [XmlAttribute]
-        public double PaidRideShare_DensityCoefficient { get; set; }
+		[XmlAttribute]
+		public double PaidRideShare_DensityCoefficient { get; set; }
 
-        [XmlAttribute]
-        public bool PaidRideShareModeIsAvailable { get; set; }
+		[XmlAttribute]
+		public bool PaidRideShareModeIsAvailable { get; set; }
 
-        [XmlAttribute]
-        public double PaidRideShare_ExtraCostPerDistanceUnit { get; set; }
+		[XmlAttribute]
+		public double PaidRideShare_ExtraCostPerDistanceUnit { get; set; }
 
-        [XmlAttribute]
-        public double PaidRideShare_FixedCostPerRide { get; set; }
+		[XmlAttribute]
+		public double PaidRideShare_FixedCostPerRide { get; set; }
 
-        [XmlAttribute]
-        public double PaidRideShare_Age26to35Coefficient { get; set; }
+		[XmlAttribute]
+		public double PaidRideShare_Age26to35Coefficient { get; set; }
 
-        [XmlAttribute]
-        public double PaidRideShare_Age18to25Coefficient { get; set; }
+		[XmlAttribute]
+		public double PaidRideShare_Age18to25Coefficient { get; set; }
 
-        [XmlAttribute]
-        public double PaidRideShare_AgeOver65Coefficient { get; set; }
+		[XmlAttribute]
+		public double PaidRideShare_AgeOver65Coefficient { get; set; }
 
-        [XmlAttribute]
-        public bool WriteResidenceBufferDensityToOwnOrRent { get; set; }
+		[XmlAttribute]
+		public bool WriteResidenceBufferDensityToOwnOrRent { get; set; }
 
-        //new for AV capabilities
-        [XmlAttribute]
-        public bool AV_IncludeAutoTypeChoice { get; set; }
+		//new for AV capabilities
+		[XmlAttribute]
+		public bool AV_IncludeAutoTypeChoice { get; set; }
 
-        [XmlAttribute]
-        public bool AV_UseSeparateAVSkimMatrices { get; set; }
+		[XmlAttribute]
+		public bool AV_UseSeparateAVSkimMatrices { get; set; }
 
-        [XmlAttribute]
-        public double AV_AutoTypeConstant { get; set; }
+		[XmlAttribute]
+		public double AV_AutoTypeConstant { get; set; }
 
-        [XmlAttribute]
-        public double AV_HHIncomeUnder50KCoefficient { get; set; }
+		[XmlAttribute]
+		public double AV_HHIncomeUnder50KCoefficient { get; set; }
 
-        [XmlAttribute]
-        public double AV_HHIncomeOver100KCoefficient { get; set; }
+		[XmlAttribute]
+		public double AV_HHIncomeOver100KCoefficient { get; set; }
 
-        [XmlAttribute]
-        public double AV_HHHeadUnder35Coefficient { get; set; }
+		[XmlAttribute]
+		public double AV_HHHeadUnder35Coefficient { get; set; }
 
-        [XmlAttribute]
-        public double AV_HHHeadOver65Coefficient { get; set; }
+		[XmlAttribute]
+		public double AV_HHHeadOver65Coefficient { get; set; }
 
-        [XmlAttribute]
-        public double AV_CoefficientPerHourCommuteTime { get; set; }
+		[XmlAttribute]
+		public double AV_CoefficientPerHourCommuteTime { get; set; }
 
-        [XmlAttribute]
-        public double AV_Own0VehiclesCoefficientForAVHouseholds { get; set; }
+		[XmlAttribute]
+		public double AV_Own0VehiclesCoefficientForAVHouseholds { get; set; }
 
-        [XmlAttribute]
-        public double AV_Own1VehicleCoefficientForAVHouseholds { get; set; }
+		[XmlAttribute]
+		public double AV_Own1VehicleCoefficientForAVHouseholds { get; set; }
 
-        [XmlAttribute]
-        public double AV_InVehicleTimeCoefficientDiscountFactor { get; set; }
+		[XmlAttribute]
+		public double AV_InVehicleTimeCoefficientDiscountFactor { get; set; }
 
-        [XmlAttribute]
-        public bool AV_PaidRideShareModeUsesAVs { get; set; }
+		[XmlAttribute]
+		public bool AV_PaidRideShareModeUsesAVs { get; set; }
 
-        [XmlAttribute]
-        public double AV_PaidRideShare_ModeConstant { get; set; }
+		[XmlAttribute]
+		public double AV_PaidRideShare_ModeConstant { get; set; }
 
-        [XmlAttribute]
-        public double AV_PaidRideShare_DensityCoefficient { get; set; }
+		[XmlAttribute]
+		public double AV_PaidRideShare_DensityCoefficient { get; set; }
 
-        [XmlAttribute]
-        public double AV_PaidRideShare_AVOwnerCoefficient { get; set; }
+		[XmlAttribute]
+		public double AV_PaidRideShare_AVOwnerCoefficient { get; set; }
 
-        [XmlAttribute]
-        public double AV_PaidRideShare_ExtraCostPerDistanceUnit { get; set; }
+		[XmlAttribute]
+		public double AV_PaidRideShare_ExtraCostPerDistanceUnit { get; set; }
 
-        [XmlAttribute]
-        public double AV_PaidRideShare_FixedCostPerRide { get; set; }
+		[XmlAttribute]
+		public double AV_PaidRideShare_FixedCostPerRide { get; set; }
 
-        [XmlAttribute]
-        public double AV_SharingEconomy_ConstantForOwning1Vehicle { get; set; }
+		[XmlAttribute]
+		public double AV_SharingEconomy_ConstantForOwning1Vehicle { get; set; }
 
-        [XmlAttribute]
-        public double AV_SharingEconomy_ConstantForOwning2Vehicles { get; set; }
+		[XmlAttribute]
+		public double AV_SharingEconomy_ConstantForOwning2Vehicles { get; set; }
 
-        [XmlAttribute]
-        public double AV_SharingEconomy_ConstantForOwning3Vehicles { get; set; }
+		[XmlAttribute]
+		public double AV_SharingEconomy_ConstantForOwning3Vehicles { get; set; }
 
-        [XmlAttribute]
-        public double AV_SharingEconomy_ConstantForOwning4Vehicles { get; set; }
+		[XmlAttribute]
+		public double AV_SharingEconomy_ConstantForOwning4Vehicles { get; set; }
 
-        [XmlAttribute]
-        public double AV_SharingEconomy_DensityCoefficientForOwning0Vehicles { get; set; }
+		[XmlAttribute]
+		public double AV_SharingEconomy_DensityCoefficientForOwning0Vehicles { get; set; }
 
-    }
+		[XmlAttribute]
+		public double PaidRideShare_PathImpedance_Gamma_Cost { get; set; }
+
+
+	}
 }
